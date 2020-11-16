@@ -1,0 +1,19 @@
+baseUrl：https://jp.finalfantasyxiv.com/
+https://jp.finalfantasyxiv.com/lodestone/playguide/db/item/?category2=1 武器list页面
+https://jp.finalfantasyxiv.com/lodestone/playguide/db/item/?category2=3 防具list页面
+url+“&page=%d”页数，一页50个，考虑一直往下爬
+终止：db__result__0__txt p标签
+单个装备：db_popup db-table__txt--detail_link a标签，获得其中的herf值，拼接baseUrl
+
+equipment相关：
+equipmentName：db-view__item__text__name * h2标签 考虑枚举type里面四个，一起搞
+equipmentPosition：db-view__item__text__category p标签
+equipmentLevel：db-view__item_level div标签
+enableJobList：db-view__item_equipment__class div标签
+equipmentType：	db-view__item__text__name 	txt-rarity_epic 紫
+		db-view__item__text__name 	txt-rarity_rare 蓝
+		db-view__item__text__name 	txt-rarity_uncommon 绿
+		db-view__item__text__name 	txt-rarity_common 白
+		考虑只抓70以上的装备，不考虑粉装
+Attr：HQ抓sys_hq_element这个div下的db-view__basic_bonus这个ul，其他都抓sys_nq_element这个div下的db-view__basic_bonus这个ul
+	判断方法：是否有db-view__item__hq_switch sys_switch_hq这个div
