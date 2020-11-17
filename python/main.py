@@ -30,7 +30,7 @@ def get_equpment_by_category(type):
                 continue
             level = int(td.string)
             if level < 345:
-                continue;
+                continue
             a = tr.find('a', attrs={'class': 'db_popup db-table__txt--detail_link'})
             equipment_url_list.append(base_url + a['href'])
 
