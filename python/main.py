@@ -1,7 +1,9 @@
 import requests
 from bs4 import BeautifulSoup
+from model import model
 
-equipment_url_list = []
+base_url = 'https://jp.finalfantasyxiv.com/'
+tab_url_list = []
 
 
 def get_text(url):
@@ -11,8 +13,7 @@ def get_text(url):
     return requests.get(url, headers=headers).text
 
 
-def get_equpment_by_category(type):
-    base_url = 'https://jp.finalfantasyxiv.com/'
+def get_equipment_by_category(type):
     index = 1
     while True:
         url = base_url + 'lodestone/playguide/db/item/?category2={}&page={}'.format(type, index)
@@ -25,38 +26,33 @@ def get_equpment_by_category(type):
             break
         tr_list = soup.find_all('tr')
         for tr in tr_list:
-            td = tr.find('td', attrs={'class': 'db-table__body--dark db-table__body--center'})
-            if td is None:
-                continue
-            level = int(td.string)
-            if level < 345:
-                continue
             a = tr.find('a', attrs={'class': 'db_popup db-table__txt--detail_link'})
-            equipment_url_list.append(base_url + a['href'])
+            # 不是装备tr
+            if a is None:
+                continue
+            current_url = base_url + a['href']
+            name = a.string
+            id = current_url.split('/')[-2]
+            td = tr.find('td', attrs={'class': 'db-table__body--dark db-table__body--center'})
+            level = int(td.string)
+
+            if model.get_url_by_id(id) is not None:
+                continue
+
+            tab_url = {}
+            tab_url['id'] = id
+            tab_url['url'] = current_url
+            tab_url['name'] = name
+            tab_url['level'] = level
+            print(tab_url)
+            tab_url_list.append(tab_url)
 
 
-def get_equipment_url():
-    base_url = 'https://jp.finalfantasyxiv.com/'
-    get_equpment_by_category(1)
-    get_equpment_by_category(3)
+def update_equipment_url():
+    get_equipment_by_category(1)
+    get_equipment_by_category(3)
 
-    # 清空url.txt
-    open("url.txt", 'w').close()
-
-    for url in equipment_url_list:
-        with open("url.txt", 'a') as f:
-            f.write(url + '\n')
-        print(url)
-
-
-def get_url_list_from_file():
-    with open('url.txt', 'r') as f:
-        while True:
-            url = f.readline()
-            if url:
-                equipment_url_list.append(url.replace('\n', ''))
-            else:
-                break
+    model.update_url(tab_url_list)
 
 
 def parse(url):
@@ -66,9 +62,7 @@ def parse(url):
 
 
 def main():
-    # get_equipment_url()
-    # get_url_list_from_file()
-    # parse(equipment_url_list[0])
+    # update_equipment_url()
     pass
 
 
