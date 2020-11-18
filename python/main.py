@@ -59,8 +59,8 @@ def update_equipment_url():
 
 
 def update_equipment(tab_url):
-    print('start update {}'.format(tab_url['name']))
-    id = tab_url['name']
+    print('start updating {}'.format(tab_url['name']))
+    id = tab_url['id']
     url = tab_url['url']
     if model.get_equipment_by_id(id) is not None:
         return
@@ -102,6 +102,8 @@ def update_equipment(tab_url):
             if attr_ul is not None:
                 break
 
+    if attr_ul is None:
+        return
     attr_li_list = attr_ul.find_all('li')
     for li in attr_li_list:
         text = li.get_text()

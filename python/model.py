@@ -34,6 +34,7 @@ class EquipmentModel(object):
         for row in result:
             equipment = {}
             equipment['id'] = row['id']
+            equipment['name'] = row['name']
             equipment['type'] = row['type']
             equipment['position'] = row['position']
             equipment['level'] = row['level']
@@ -102,7 +103,6 @@ class EquipmentModel(object):
         sql_value += "'" + equipment.get('不屈', '') + "'"
         sql_value += ')'
         sql = sql_head + sql_value
-        print(sql)
         self.__db.execute(sql)
         print('update {} success!'.format(equipment['name']))
 
