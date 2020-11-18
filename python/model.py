@@ -82,5 +82,29 @@ class EquipmentModel(object):
         sql = sql_head + sql_values
         self.__db.execute(sql)
 
+    def update_equipment(self, equipment):
+        sql_head = 'insert into equipment values'
+        sql_value = ''
+        self.__add_equipment(equipment)
+        sql_value += '('
+        sql_value += "'" + equipment['id'] + "',"
+        sql_value += "'" + equipment['name'] + "',"
+        sql_value += str(equipment['type']) + ","
+        sql_value += str(equipment['position']) + ","
+        sql_value += str(equipment['level']) + ","
+        sql_value += "'" + equipment['enableJobList'] + "',"
+        sql_value += "'" + equipment.get('クリティカル', '') + "',"
+        sql_value += "'" + equipment.get('ダイレクトヒット', '') + "',"
+        sql_value += "'" + equipment.get('意思力', '') + "',"
+        sql_value += "'" + equipment.get('信仰', '') + "',"
+        sql_value += "'" + equipment.get('スキルスピード', '') + "',"
+        sql_value += "'" + equipment.get('スペルスピード', '') + "',"
+        sql_value += "'" + equipment.get('不屈', '') + "'"
+        sql_value += ')'
+        sql = sql_head + sql_value
+        print(sql)
+        self.__db.execute(sql)
+        print('update {} success!'.format(equipment['name']))
+
 
 model = EquipmentModel()

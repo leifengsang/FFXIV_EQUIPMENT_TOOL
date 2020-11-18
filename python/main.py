@@ -5,6 +5,7 @@ from model import model
 base_url = 'https://jp.finalfantasyxiv.com/'
 tab_url_list = []
 position_dict = {}
+job_dict = {}
 
 
 def get_text(url):
@@ -57,13 +58,8 @@ def update_equipment_url():
     model.update_url(tab_url_list)
 
 
-def parse(url):
-    print(url)
-    # text = get_text(url)
-    # print(text)
-
-
 def update_equipment(tab_url):
+    print('start update {}'.format(tab_url['name']))
     id = tab_url['name']
     url = tab_url['url']
     if model.get_equipment_by_id(id) is not None:
@@ -83,6 +79,35 @@ def update_equipment(tab_url):
         equipment['type'] = 3
     elif soup.find('h2', attrs={'class': base_class + 'common'}):  # 白装
         equipment['type'] = 4
+    else:
+        equipment['type'] = 5  # 剩下的就是粉装了，懒得找界面去check
+    position_str = soup.find('p', attrs={'class': 'db-view__item__text__category'}).string
+    equipment['position'] = position_dict.get(position_str, -1)
+    enable_job_str = soup.find('div', attrs={'class': 'db-view__item_equipment__class'}).string
+    enable_job_list = enable_job_str.split(' ')
+    enable_job = ''
+    for job in enable_job_list:
+        if job not in job_dict:
+            continue
+        enable_job += job_dict.get(job, 'KNOWN') + '#'
+    equipment['enableJobList'] = enable_job.strip('#')
+    if soup.find('div', attrs={'class': 'db-view__item__hq_switch sys_switch_hq'}) is not None:  # HQ
+        class_name = 'sys_hq_element'
+    else:  # NQ
+        class_name = 'sys_nq_element'
+    attr_div_list = soup.find_all('div', attrs={'class': class_name})
+    for div in attr_div_list:
+        if div['class'][0] == class_name:
+            attr_ul = div.find('ul', attrs={'class': 'db-view__basic_bonus'})
+            if attr_ul is not None:
+                break
+
+    attr_li_list = attr_ul.find_all('li')
+    for li in attr_li_list:
+        text = li.get_text()
+        text_info = text.split(' ')
+        equipment[text_info[0]] = text_info[1].strip('+')
+    model.update_equipment(equipment)
 
 
 def constant_init():
@@ -133,11 +158,29 @@ def constant_init():
     position_dict['腕輪'] = 11
     position_dict['指輪'] = 12
 
+    job_dict['ナイト'] = 'PLD'
+    job_dict['戦士'] = 'WAR'
+    job_dict['暗黒騎士'] = 'DRK'
+    job_dict['ガンブレイカー'] = 'GNB'
+    job_dict['モンク'] = 'MNK'
+    job_dict['竜騎士'] = 'DRG'
+    job_dict['侍'] = 'SAM'
+    job_dict['吟遊詩人'] = 'BRD'
+    job_dict['忍者'] = 'NIN'
+    job_dict['機工士'] = 'MCH'
+    job_dict['踊り子'] = 'DNC'
+    job_dict['黒魔道士'] = 'BLM'
+    job_dict['召喚士'] = 'SMN'
+    job_dict['赤魔道士'] = 'RDM'
+    job_dict['白魔道士'] = 'WHM'
+    job_dict['学者'] = 'MCH'
+    job_dict['占星術師'] = 'AST'
+
 
 def main():
     constant_init()
     # update_equipment_url()
-    # for tab_url in tab_url_list:
+    # for tab_url in model.get_url_list():
     #     update_equipment(tab_url)
 
 
