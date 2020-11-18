@@ -1,9 +1,9 @@
 package meta;
 
 /**
- * ��ʿ
+ * 机工士
  * @author Cookies
  */
-public class SAM extends Job {
+public class MCH extends Job {
 
 }

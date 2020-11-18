@@ -33,7 +33,7 @@ public class SQLHelper {
 				Class.forName("org.sqlite.JDBC");
 				connection = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
 			} catch (Exception e) {
-				System.out.println("Á¬½ÓÊı¾İ¿âÊ§°Ü£¡");
+				System.out.println("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½İ¿ï¿½Ê§ï¿½Ü£ï¿½");
 			}
 		}
 		return connection;
@@ -44,7 +44,7 @@ public class SQLHelper {
 			resultSet = getStatement().executeQuery(sql);
 			return resultSet;
 		} catch (Exception e) {
-			System.out.println("Ö´ĞĞsqlÊ§°Ü£º" + e.getMessage());
+			System.out.println("Ö´ï¿½ï¿½sqlÊ§ï¿½Ü£ï¿½" + e.getMessage());
 			return null;
 		}
 	}
@@ -57,7 +57,7 @@ public class SQLHelper {
 	}
 
 	/**
-	 * Êı¾İ¿â×ÊÔ´¹Ø±ÕºÍÊÍ·Å
+	 * æ•°æ®åº“èµ„æºå…³é—­å’Œé‡Šæ”¾
 	 */
 	public void destroyed() {
 		try {

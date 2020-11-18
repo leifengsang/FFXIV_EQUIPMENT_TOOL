@@ -4,86 +4,86 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Equipment {
-	public static final int POS_ARMS = 1; //ÎäÆ÷
+	public static final int POS_ARMS = 1; //æ­¦å™¨
 
-	public static final int POS_SECONDARY = 2; //¸±ÊÖ
+	public static final int POS_SECONDARY = 2; //å‰¯æ‰‹
 
-	public static final int POS_HEAD = 3; //Í·
+	public static final int POS_HEAD = 3; //å¤´
 
-	public static final int POS_BODY = 4; //ÒÂ·ş
+	public static final int POS_BODY = 4; //è¡£æœ
 
-	public static final int POS_HANDS = 5; //ÊÖ
+	public static final int POS_HANDS = 5; //æ‰‹
 
-	public static final int POS_WAIST = 6; //Ñü´ø
+	public static final int POS_WAIST = 6; //è…°å¸¦
 
-	public static final int POS_LEGS = 7; //¿ã×Ó
+	public static final int POS_LEGS = 7; //è£¤å­
 
-	public static final int POS_FEET = 8; //Ğ¬×Ó
+	public static final int POS_FEET = 8; //é‹å­
 
-	public static final int POS_EARRINGS = 9; //¶ú»·
+	public static final int POS_EARRINGS = 9; //è€³ç¯
 
-	public static final int POS_NECKLACE = 10; //ÏîÁ´
+	public static final int POS_NECKLACE = 10; //é¡¹é“¾
 
-	public static final int POS_BRACELETS = 11; //ÊÖÁ´
+	public static final int POS_BRACELETS = 11; //æ‰‹é“¾
 
-	public static final int POS_RING1 = 12; //½äÖ¸1
+	public static final int POS_RING1 = 12; //æˆ’æŒ‡1
 
-	public static final int POS_RING2 = 13; //½äÖ¸2
+	public static final int POS_RING2 = 13; //æˆ’æŒ‡2
 
-	public static final int POS_LIMIT = 13; //²¿Î»ÉÏÏŞ
+	public static final int POS_LIMIT = 13; //éƒ¨ä½ä¸Šé™
 
 	public static final int[] MAIN_EQUIPMENT_LIST = { 1, 3, 4, 5, 7, 8 };
 
 	public static final int[] SUB_EQUIPMENT_LIST = { 6, 9, 10, 11, 12, 13 };
 
-	public static final int TYPE_HQ = 1; //ÂÌ
+	public static final int TYPE_HQ = 1; //ç»¿
 
-	public static final int TYPE_UN_COMMON = 2; //°×
+	public static final int TYPE_UN_COMMON = 2; //ç™½
 
-	public static final int TYPE_COMMON = 3; //À¶
+	public static final int TYPE_COMMON = 3; //è“
 
-	public static final int TYPE_PURPLE = 4; //×Ï
+	public static final int TYPE_PURPLE = 4; //ç´«
 
 	/**
-	 * ×°±¸ID
+	 * è£…å¤‡ID
 	 */
 	private int id;
 
 	/**
-	 * ×°±¸Ãû³Æ
+	 * è£…å¤‡åç§°
 	 */
 	private String name;
 
 	/**
-	 * ×°±¸ÊôĞÔ
+	 * è£…å¤‡å±æ€§
 	 */
 	private Attr attr;
 
 	/**
-	 * ×°±¸Ö§³ÖµÄÌØÖ°
+	 * è£…å¤‡æ”¯æŒçš„ç‰¹èŒ
 	 */
 	private List<Class<? extends Job>> enableJobList;
 
 	/**
-	 * ×°±¸ÀàĞÍ
-	 * 1.ÖÆ×÷HQ£¨Îå¿×½û¶Ï£©
-	 * 2.»ù´¡×°±¸£¨¶ş¿×£©
-	 * 3.×ÏÎä£¨Îå¿×²»½û¶Ï£©
+	 * è£…å¤‡ç±»å‹
+	 * 1.åˆ¶ä½œHQï¼ˆäº”å­”ç¦æ–­ï¼‰
+	 * 2.åŸºç¡€è£…å¤‡ï¼ˆäºŒå­”ï¼‰
+	 * 3.ç´«æ­¦ï¼ˆäº”å­”ä¸ç¦æ–­ï¼‰
 	 */
 	private int type;
 
 	/**
-	 * ×°±¸µÄ²¿Î»
+	 * è£…å¤‡çš„éƒ¨ä½
 	 */
 	private int position;
 
 	/**
-	 * ×°µÈ
+	 * è£…ç­‰
 	 */
 	private int level;
 
 	/**
-	 * Ä§¾§Ê¯
+	 * é­”æ™¶çŸ³
 	 */
 	private ArrayList<Materia<String, Integer>> materiaList = new ArrayList<>();
 
@@ -138,9 +138,9 @@ public class Equipment {
 	}
 
 	/**
-	 * TODO:ºóĞøÔÚ±ğµÄµØ·½Ğ´Ò»¸öÅĞ¶ÏÖ÷ÊÖÊÇ·ñÖ§³Ö¸±ÊÖ
-	 * Ä¿Ç°Ö§³ÖµÄÓĞ£ºµ¥ÊÖ·¨ÕÈ¡¢ÆïÊ¿½£
-	 * Ôİ²»¿¼ÂÇµ¥ÊÖ·¨ÕÈ¡¢Ö»ĞèÅĞ¶ÏJob.EquipmentMap.get(Equipment.POS_ARMS).enableJobList.contains(PLD.class)
+	 * TODO:åç»­åœ¨åˆ«çš„åœ°æ–¹å†™ä¸€ä¸ªåˆ¤æ–­ä¸»æ‰‹æ˜¯å¦æ”¯æŒå‰¯æ‰‹
+	 * ç›®å‰æ”¯æŒçš„æœ‰ï¼šå•æ‰‹æ³•æ–ã€éª‘å£«å‰‘
+	 * æš‚ä¸è€ƒè™‘å•æ‰‹æ³•æ–ã€åªéœ€åˆ¤æ–­Job.EquipmentMap.get(Equipment.POS_ARMS).enableJobList.contains(PLD.class)
 	 * @return
 	 */
 	public boolean isEnableSecondary() {

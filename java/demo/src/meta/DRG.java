@@ -1,9 +1,9 @@
 package meta;
 
 /**
- * °×Ä§·¨Ê¦
+ * é¾™éª‘å£«
  * @author Cookies
  */
-public class WHM extends Job {
+public class DRG extends Job {
 
 }

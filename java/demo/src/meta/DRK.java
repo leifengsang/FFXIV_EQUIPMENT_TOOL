@@ -1,7 +1,7 @@
 package meta;
 
 /**
- * °µºÚÆïÊ¿
+ * æš—é»‘éª‘å£«
  * @author Cookies
  */
 public class DRK extends Job {

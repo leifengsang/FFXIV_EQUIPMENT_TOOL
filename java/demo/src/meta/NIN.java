@@ -1,7 +1,7 @@
 package meta;
 
 /**
- * ָּױß
+ * ו¿ט€…
  * @author Cookies
  */
 public class NIN extends Job {

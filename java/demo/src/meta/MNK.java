@@ -1,9 +1,9 @@
 package meta;
 
 /**
- * ÁúÆïÊ¿
+ * æ­¦åƒ§
  * @author Cookies
  */
-public class DRG extends Job {
+public class MNK extends Job {
 
 }

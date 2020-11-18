@@ -16,37 +16,37 @@ public class Attr implements Cloneable {
 	private static final int BASE_FORTITUDE = 380;
 
 	/**
-	 * ±©»÷
+	 * æš´å‡»
 	 */
 	private int criticalHit;
 
 	/**
-	 * Ö±»÷
+	 * ç›´å‡»
 	 */
 	private int directHit;
 
 	/**
-	 * ĞÅÄî
+	 * ä¿¡å¿µ
 	 */
 	private int determination;
 
 	/**
-	 * ĞÅÑö
+	 * ä¿¡ä»°
 	 */
 	private int faith;
 
 	/**
-	 * ¼¼ÄÜËÙ¶È
+	 * æŠ€èƒ½é€Ÿåº¦
 	 */
 	private int skillSpeed;
 
 	/**
-	 * Ó½³ªËÙ¶È
+	 * å’å”±é€Ÿåº¦
 	 */
 	private int spellSpeed;
 
 	/**
-	 * ¼áÈÍ
+	 * åšéŸ§
 	 */
 	private int fortitude;
 
@@ -111,7 +111,7 @@ public class Attr implements Cloneable {
 	}
 
 	/**
-	 * Ä§¾§Ê¯ÓÃ¹¹Ôì·½·¨
+	 * é­”æ™¶çŸ³ç”¨æ„é€ æ–¹æ³•
 	 * @param materia
 	 * @throws Error
 	 */
@@ -139,12 +139,12 @@ public class Attr implements Cloneable {
 			this.fortitude = materia.getValue();
 			break;
 		default:
-			throw new Error("ÊôĞÔ´íÎó£¡");
+			throw new Error("å±æ€§é”™è¯¯ï¼");
 		}
 	}
 
 	/**
-	 * ÖØĞÂ¼ÆËãÊôĞÔÊ±Ê×ÏÈ³õÊ¼»¯³É³õÊ¼ÊôĞÔ
+	 * é‡æ–°è®¡ç®—å±æ€§æ—¶é¦–å…ˆåˆå§‹åŒ–æˆåˆå§‹å±æ€§
 	 */
 	public void init() {
 		this.criticalHit = BASE_CRITICAL_HIT;
@@ -157,7 +157,7 @@ public class Attr implements Cloneable {
 	}
 
 	/**
-	 * Ôö¼ÓÒ»ÌõÊôĞÔ£¨×°±¸orÄ§¾§Ê¯£©
+	 * å¢åŠ ä¸€æ¡å±æ€§ï¼ˆè£…å¤‡oré­”æ™¶çŸ³ï¼‰
 	 * @param attr
 	 */
 	public void add(Attr attr) {
@@ -171,7 +171,7 @@ public class Attr implements Cloneable {
 	}
 
 	/**
-	 * »ñµÃÊôĞÔÉÏÏŞ
+	 * è·å¾—å±æ€§ä¸Šé™
 	 * @return
 	 */
 	public int getMateriaValueLimit() {
@@ -187,8 +187,8 @@ public class Attr implements Cloneable {
 	}
 
 	/**
-	 * ¼ì²é²¢ĞŞÕıËãÉÏÄ§¾§Ê¯¼Ó³ÉºóÊôĞÔÊÇ·ñ³¬¹ıÉÏÏŞ
-	 * @param limit ÊôĞÔÉÏÏŞ
+	 * æ£€æŸ¥å¹¶ä¿®æ­£ç®—ä¸Šé­”æ™¶çŸ³åŠ æˆåå±æ€§æ˜¯å¦è¶…è¿‡ä¸Šé™
+	 * @param limit å±æ€§ä¸Šé™
 	 */
 	public void checkLimit(int limit) {
 		this.criticalHit = Math.min(this.criticalHit, limit);

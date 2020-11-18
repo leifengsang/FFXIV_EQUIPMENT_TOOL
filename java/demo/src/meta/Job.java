@@ -3,7 +3,7 @@ package meta;
 import java.util.HashMap;
 
 /**
- * ÌØÖ°
+ * ç‰¹èŒ
  * @author Cookies
  */
 public class Job {
@@ -20,7 +20,7 @@ public class Job {
 	}
 
 	/**
-	 * ¼ÆËã×ÔÉíÊôĞÔ
+	 * è®¡ç®—è‡ªèº«å±æ€§
 	 */
 	private void calAttr() {
 		attr.init();
@@ -30,19 +30,19 @@ public class Job {
 	}
 
 	/**
-	 * ×°±¸Ò»¼ş×°±¸
+	 * è£…å¤‡ä¸€ä»¶è£…å¤‡
 	 * @param equipment
 	 */
 	public void equip(Equipment equipment) {
 		if (equipment.getPosition() > Equipment.POS_LIMIT) {
-			System.out.println("·Ç·¨²¿Î»£¡");
+			System.out.println("éæ³•éƒ¨ä½ï¼");
 			return;
 		}
 
 		if (equipment.getPosition() == Equipment.POS_SECONDARY) {
 			Equipment arms = equipmentMap.get(Equipment.POS_ARMS);
 			if (arms == null || !arms.isEnableSecondary()) {
-				System.out.println("Ö÷ÎäÆ÷Î´×°±¸»ò²»Ö§³Ö¸±ÊÖ£¡");
+				System.out.println("ä¸»æ­¦å™¨æœªè£…å¤‡æˆ–ä¸æ”¯æŒå‰¯æ‰‹ï¼");
 				return;
 			}
 		}

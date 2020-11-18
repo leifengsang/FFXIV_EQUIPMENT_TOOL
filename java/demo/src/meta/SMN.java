@@ -1,9 +1,9 @@
 package meta;
 
 /**
- * ѧ��
+ * 召唤师
  * @author Cookies
  */
-public class SCH extends Job {
+public class SMN extends Job {
 
 }

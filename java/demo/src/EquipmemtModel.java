@@ -69,7 +69,7 @@ public class EquipmemtModel {
 
 			}
 		} catch (Exception e) {
-			System.out.println("从数据库加载装备数据失败:" + e.getMessage());
+			System.out.println("浠庢暟鎹簱鍔犺浇瑁呭鏁版嵁澶辫触:" + e.getMessage());
 		}
 	}
 

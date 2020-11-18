@@ -1,7 +1,7 @@
 package meta;
 
 /**
- * ³àÄ§·¨Ê¦
+ * èµ¤é­”æ³•å¸ˆ
  * @author Cookies
  */
 public class RDM extends Job {

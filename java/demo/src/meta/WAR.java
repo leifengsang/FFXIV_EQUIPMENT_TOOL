@@ -1,9 +1,9 @@
 package meta;
 
 /**
- * Õ¼ÐÇÊõÊ¿
+ * æˆ˜å£«
  * @author Cookies
  */
-public class AST extends Job {
+public class WAR extends Job {
 
 }
