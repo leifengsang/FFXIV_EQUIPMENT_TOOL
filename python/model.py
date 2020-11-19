@@ -1,4 +1,5 @@
 from sql import EasySqlite
+import time
 
 
 class EquipmentModel(object):
@@ -104,7 +105,22 @@ class EquipmentModel(object):
         sql_value += ')'
         sql = sql_head + sql_value
         self.__db.execute(sql)
-        print('update {} success!'.format(equipment['name']))
+        sql_update_url = "update url set done=1 where id=?"
+        self.__db.execute(sql_update_url, [equipment['id']])
+        print('[{}]update {} success!'.format(time.strftime("%H:%M:%S", time.localtime()), equipment['name']))
+
+    def get_url_undone(self):
+        list = []
+        sql = 'select * from url where done=0'
+        result = self.__db.execute(sql)
+        for row in result:
+            url = {}
+            url['id'] = row['id']
+            url['url'] = row['url']
+            url['name'] = row['name']
+            url['level'] = row['level']
+            list.append(url)
+        return list
 
 
 model = EquipmentModel()

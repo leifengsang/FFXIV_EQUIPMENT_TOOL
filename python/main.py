@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from model import model
+import time
 
 base_url = 'https://jp.finalfantasyxiv.com/'
 tab_url_list = []
@@ -59,11 +60,9 @@ def update_equipment_url():
 
 
 def update_equipment(tab_url):
-    print('start updating {}...'.format(tab_url['name']))
+    print('[{}]start updating {}...'.format(time.strftime("%H:%M:%S", time.localtime()), tab_url['name']))
     id = tab_url['id']
     url = tab_url['url']
-    if model.get_equipment_by_id(id) is not None:
-        return
     text = get_text(url)
     soup = BeautifulSoup(text, 'lxml')
     equipment = {}
@@ -79,8 +78,10 @@ def update_equipment(tab_url):
         equipment['type'] = 3
     elif soup.find('h2', attrs={'class': base_class + 'common'}) is not None:  # 白装
         equipment['type'] = 4
+    elif soup.find('h2', attrs={'class': base_class + 'magic'}) is not None:  # 粉装
+        equipment['type'] = 5
     else:
-        equipment['type'] = 5  # 剩下的就是粉装了，懒得找界面去check
+        equipment['type'] = -1
     position_str = soup.find('p', attrs={'class': 'db-view__item__text__category'}).string
     equipment['position'] = position_dict.get(position_str, -1)
     enable_job_str = soup.find('div', attrs={'class': 'db-view__item_equipment__class'}).string
@@ -184,7 +185,8 @@ def constant_init():
 def main():
     constant_init()
     # update_equipment_url()
-    for tab_url in model.get_url_list():
+    undone_list = model.get_url_undone()
+    for tab_url in undone_list:
         update_equipment(tab_url)
 
 
