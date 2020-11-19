@@ -103,13 +103,12 @@ def update_equipment(tab_url):
             if attr_ul is not None:
                 break
 
-    if attr_ul is None:
-        return
-    attr_li_list = attr_ul.find_all('li')
-    for li in attr_li_list:
-        text = li.get_text()
-        text_info = text.split(' ')
-        equipment[text_info[0]] = text_info[1].strip('+')
+    if attr_ul is not None:
+        attr_li_list = attr_ul.find_all('li')
+        for li in attr_li_list:
+            text = li.get_text()
+            text_info = text.split(' ')
+            equipment[text_info[0]] = text_info[1].strip('+')
     model.update_equipment(equipment)
 
 
