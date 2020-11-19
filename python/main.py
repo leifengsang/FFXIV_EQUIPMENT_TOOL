@@ -13,7 +13,15 @@ def get_text(url):
     headers = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.193 Safari/537.36',
     }
-    return requests.get(url, headers=headers).text
+    try_times = 3
+    for i in range(try_times):
+        try:
+            response = requests.get(url, headers=headers, timeout=30)
+            if response.status_code == 200:
+                return response.text
+        except:
+            print('get url[{}] failed...try {} times'.format(url, i + 1))
+    return None
 
 
 def get_equipment_by_category(type):
@@ -61,9 +69,11 @@ def update_equipment_url():
 
 def update_equipment(tab_url):
     print('[{}]start updating {}...'.format(time.strftime("%H:%M:%S", time.localtime()), tab_url['name']))
-    id = tab_url['id']
     url = tab_url['url']
     text = get_text(url)
+    if text is None:
+        print('can not get equipment where url={}'.format(url))
+        return
     soup = BeautifulSoup(text, 'lxml')
     equipment = {}
     equipment['id'] = tab_url['id']
