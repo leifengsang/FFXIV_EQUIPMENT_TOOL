@@ -59,7 +59,7 @@ def update_equipment_url():
 
 
 def update_equipment(tab_url):
-    print('start updating {}'.format(tab_url['name']))
+    print('start updating {}...'.format(tab_url['name']))
     id = tab_url['id']
     url = tab_url['url']
     if model.get_equipment_by_id(id) is not None:
@@ -70,14 +70,14 @@ def update_equipment(tab_url):
     equipment['id'] = tab_url['id']
     equipment['name'] = tab_url['name']
     equipment['level'] = tab_url['level']
-    base_class = 'db-view__item__text__name 	txt-rarity_'
-    if soup.find('h2', attrs={'class': base_class + 'epic'}):  # 紫装
+    base_class = 'txt-rarity_'
+    if soup.find('h2', attrs={'class': base_class + 'epic'}) is not None:  # 紫装
         equipment['type'] = 1
-    elif soup.find('h2', attrs={'class': base_class + 'rare'}):  # 蓝装
+    elif soup.find('h2', attrs={'class': base_class + 'rare'}) is not None:  # 蓝装
         equipment['type'] = 2
-    elif soup.find('h2', attrs={'class': base_class + 'uncommon'}):  # 绿装
+    elif soup.find('h2', attrs={'class': base_class + 'uncommon'}) is not None:  # 绿装
         equipment['type'] = 3
-    elif soup.find('h2', attrs={'class': base_class + 'common'}):  # 白装
+    elif soup.find('h2', attrs={'class': base_class + 'common'}) is not None:  # 白装
         equipment['type'] = 4
     else:
         equipment['type'] = 5  # 剩下的就是粉装了，懒得找界面去check
@@ -89,7 +89,7 @@ def update_equipment(tab_url):
     for job in enable_job_list:
         if job not in job_dict:
             continue
-        enable_job += job_dict.get(job, 'KNOWN') + '#'
+        enable_job += job_dict[job] + '#'
     equipment['enableJobList'] = enable_job.strip('#')
     if soup.find('div', attrs={'class': 'db-view__item__hq_switch sys_switch_hq'}) is not None:  # HQ
         class_name = 'sys_hq_element'
@@ -148,6 +148,7 @@ def constant_init():
     position_dict['片手幻具'] = 1
     position_dict['両手幻具'] = 1
     position_dict['魔道書(学者専用)'] = 1
+    position_dict['天球儀'] = 1
     position_dict['盾'] = 2
     position_dict['頭防具'] = 3
     position_dict['胴防具'] = 4
@@ -177,13 +178,14 @@ def constant_init():
     job_dict['白魔道士'] = 'WHM'
     job_dict['学者'] = 'MCH'
     job_dict['占星術師'] = 'AST'
+    job_dict['全クラス'] = 'ALL'
 
 
 def main():
     constant_init()
     # update_equipment_url()
-    # for tab_url in model.get_url_list():
-    #     update_equipment(tab_url)
+    for tab_url in model.get_url_list():
+        update_equipment(tab_url)
 
 
 if __name__ == '__main__':
