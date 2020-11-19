@@ -20,7 +20,8 @@ def get_text(url):
             if response.status_code == 200:
                 return response.text
         except:
-            print('get url[{}] failed...try {} times'.format(url, i + 1))
+            print(
+                '[{}]get url[{}] failed...try {} times'.format(time.strftime("%H:%M:%S", time.localtime()), url, i + 1))
     return None
 
 
@@ -28,7 +29,7 @@ def get_equipment_by_category(type):
     index = 1
     while True:
         url = base_url + 'lodestone/playguide/db/item/?category2={}&page={}'.format(type, index)
-        print('currentUrl:' + url)
+        print('[{}]currentUrl:'.format(time.strftime("%H:%M:%S", time.localtime())) + url)
         index += 1
         text = get_text(url)
         soup = BeautifulSoup(text, 'lxml')
@@ -55,7 +56,6 @@ def get_equipment_by_category(type):
             tab_url['url'] = current_url
             tab_url['name'] = name
             tab_url['level'] = level
-            print(tab_url)
             tab_url_list.append(tab_url)
 
 
@@ -72,7 +72,7 @@ def update_equipment(tab_url):
     url = tab_url['url']
     text = get_text(url)
     if text is None:
-        print('can not get equipment where url={}'.format(url))
+        print('[{}]can not get equipment where url={}'.format(time.strftime("%H:%M:%S", time.localtime()), url))
         return
     soup = BeautifulSoup(text, 'lxml')
     equipment = {}
