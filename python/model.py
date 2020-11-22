@@ -95,13 +95,13 @@ class EquipmentModel(object):
         sql_value += str(equipment['position']) + ","
         sql_value += str(equipment['level']) + ","
         sql_value += "'" + equipment['enableJobList'] + "',"
-        sql_value += "'" + equipment.get('クリティカル', '') + "',"
-        sql_value += "'" + equipment.get('ダイレクトヒット', '') + "',"
-        sql_value += "'" + equipment.get('意思力', '') + "',"
-        sql_value += "'" + equipment.get('信仰', '') + "',"
-        sql_value += "'" + equipment.get('スキルスピード', '') + "',"
-        sql_value += "'" + equipment.get('スペルスピード', '') + "',"
-        sql_value += "'" + equipment.get('不屈', '') + "'"
+        sql_value += "'" + equipment.get('クリティカル', 0) + "',"
+        sql_value += "'" + equipment.get('ダイレクトヒット', 0) + "',"
+        sql_value += "'" + equipment.get('意思力', 0) + "',"
+        sql_value += "'" + equipment.get('信仰', 0) + "',"
+        sql_value += "'" + equipment.get('スキルスピード', 0) + "',"
+        sql_value += "'" + equipment.get('スペルスピード', 0) + "',"
+        sql_value += "'" + equipment.get('不屈', 0) + "'"
         sql_value += ')'
         sql = sql_head + sql_value
         self.__db.execute(sql)
