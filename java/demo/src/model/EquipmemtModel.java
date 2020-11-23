@@ -1,3 +1,4 @@
+package model;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,6 +8,7 @@ import java.util.Map;
 import meta.Attr;
 import meta.Equipment;
 import meta.Job;
+import sql.SQLHelper;
 
 public class EquipmemtModel {
 
