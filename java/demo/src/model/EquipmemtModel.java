@@ -1,4 +1,5 @@
 package model;
+
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +12,9 @@ import meta.Job;
 import sql.SQLHelper;
 
 public class EquipmemtModel {
+
+	public static final String[] Job_LIST = { "PLD", "WAR", "DRK", "GNB", "WHM", "SCH", "AST", "MNK", "DRG", "NIN",
+			"SAM", "BRD", "MCH", "DNC", "BLM", "SMN", "RDM" };
 
 	private final SQLHelper sqlHelper;
 
