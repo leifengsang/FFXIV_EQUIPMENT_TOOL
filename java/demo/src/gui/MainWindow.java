@@ -17,11 +17,15 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
 import model.EquipmemtModel;
+import javax.swing.JScrollPane;
 
 public class MainWindow {
+
+	private static final int TITLE_HEIGHT = 35;
 
 	private JFrame frame;
 	private JTextField floorInput;
@@ -54,21 +58,21 @@ public class MainWindow {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		initGlobal(new Font("alias", Font.PLAIN, 12));
+		initGlobal(new Font("alias", Font.PLAIN, 14));
 
 		frame = new JFrame();
 		frame.setTitle("配装模拟器");
-		frame.setBounds(100, 100, 1024, 768);
+		frame.setBounds(100, 100, 1280, 960);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
 		frame.getContentPane().setLayout(null);
 
 		JPanel attrPanel = new JPanel();
-		attrPanel.setBounds(708, 10, 300, 718);
+		attrPanel.setBounds(frame.getWidth() - 300, 10, 300, frame.getHeight() - 10 - TITLE_HEIGHT);
 		frame.getContentPane().add(attrPanel);
 		attrPanel.setLayout(new GridLayout(5, 1, 0, 0));
 
-		JPanel criticalHitPanel = new JPanel();
+		JPanel criticalHitPanel = new BorderPanel();
 		attrPanel.add(criticalHitPanel);
 		criticalHitPanel.setLayout(new GridLayout(0, 2, 0, 0));
 
@@ -102,7 +106,7 @@ public class MainWindow {
 		JLabel nextCriticalHitRateNumLabel = new JLabel("暴击率（值）");
 		criticalHitPanel.add(nextCriticalHitRateNumLabel);
 
-		JPanel directHitPanel = new JPanel();
+		JPanel directHitPanel = new BorderPanel();
 		attrPanel.add(directHitPanel);
 		directHitPanel.setLayout(new GridLayout(0, 2, 0, 0));
 
@@ -136,7 +140,7 @@ public class MainWindow {
 		JLabel nextDirectHitRateNumLabel = new JLabel("直击率（值）");
 		directHitPanel.add(nextDirectHitRateNumLabel);
 
-		JPanel determinationPanel = new JPanel();
+		JPanel determinationPanel = new BorderPanel();
 		attrPanel.add(determinationPanel);
 		determinationPanel.setLayout(new GridLayout(0, 2, 0, 0));
 
@@ -170,7 +174,7 @@ public class MainWindow {
 		JLabel nextDeterminationRateNumLabel = new JLabel("增伤比（值）");
 		determinationPanel.add(nextDeterminationRateNumLabel);
 
-		JPanel speedPanel = new JPanel();
+		JPanel speedPanel = new BorderPanel();
 		attrPanel.add(speedPanel);
 		speedPanel.setLayout(new GridLayout(0, 2, 0, 0));
 
@@ -204,7 +208,7 @@ public class MainWindow {
 		JLabel nextGcdNumLabel = new JLabel("复唱时间（值）");
 		speedPanel.add(nextGcdNumLabel);
 
-		JPanel extraPanel = new JPanel();
+		JPanel extraPanel = new BorderPanel();
 		attrPanel.add(extraPanel);
 		extraPanel.setLayout(new GridLayout(0, 2, 0, 0));
 
@@ -239,16 +243,16 @@ public class MainWindow {
 		extraPanel.add(nextExtraRateNumLabel);
 
 		JPanel filterPanel = new JPanel();
-		filterPanel.setBounds(10, 10, 699, 53);
+		filterPanel.setBounds(10, 10, frame.getWidth() - 300 - 10, 50);
 		frame.getContentPane().add(filterPanel);
 		filterPanel.setLayout(null);
 
 		JComboBox<String> jobComboBox = new JComboBox<>();
-		jobComboBox.setBounds(59, 13, 107, 24);
-		filterPanel.add(jobComboBox);
 		for (String job : EquipmemtModel.Job_LIST) {
 			jobComboBox.addItem(job);
 		}
+		jobComboBox.setBounds(59, 13, 107, 24);
+		filterPanel.add(jobComboBox);
 
 		JLabel jobLabel = new JLabel("职业：");
 		jobLabel.setBounds(14, 16, 72, 18);
@@ -314,8 +318,64 @@ public class MainWindow {
 		filterPanel.add(filterBtn);
 
 		JPanel equipmentPanel = new JPanel();
-		equipmentPanel.setBounds(10, 63, 699, 665);
+		equipmentPanel.setBounds(10, 60, frame.getWidth() - 300 - 10, frame.getHeight() - 60 - TITLE_HEIGHT);
 		frame.getContentPane().add(equipmentPanel);
+		equipmentPanel.setLayout(null);
+
+		JPanel headPanel = new JPanel();
+		headPanel.setBounds(0, 0, equipmentPanel.getWidth(), 30);
+		equipmentPanel.add(headPanel);
+		headPanel.setLayout(null);
+
+		int offsetX = 0;
+		JLabel headNameLabel = new BorderLabel("名称");//最长的名字：レプリカ・スカイラット・ストライカーフィンガレスグローブ
+		headNameLabel.setHorizontalAlignment(SwingConstants.CENTER);//具体的装备界面需要更改为left
+		headNameLabel.setBounds(0, 0, 500, 30);
+		headPanel.add(headNameLabel);
+		offsetX += headNameLabel.getWidth();
+
+//		JLabel headItemLevelLabel = new JLabel("level.505");
+//		headItemLevelLabel.setBounds(headNameLabel.getWidth() - 80, 0, 80, 30);
+//		headPanel.add(headItemLevelLabel);
+
+		final int remainWidth = headPanel.getWidth() - offsetX - 10;
+		final int remainBlock = 6;
+		
+		JLabel HeadMateriaLabel = new BorderLabel("魔晶石");
+		HeadMateriaLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		HeadMateriaLabel.setBounds(offsetX, 0, remainWidth / remainBlock, 30);
+		headPanel.add(HeadMateriaLabel);
+		offsetX += remainWidth / remainBlock;
+		
+		JLabel HeadCriticalHitLabel = new BorderLabel("暴击");
+		HeadCriticalHitLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		HeadCriticalHitLabel.setBounds(offsetX, 0, remainWidth / remainBlock, 30);
+		headPanel.add(HeadCriticalHitLabel);
+		offsetX += remainWidth / remainBlock;
+
+		JLabel headDirectHitLabel = new BorderLabel("直击");
+		headDirectHitLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		headDirectHitLabel.setBounds(offsetX, 0, remainWidth / remainBlock, 30);
+		headPanel.add(headDirectHitLabel);
+		offsetX += remainWidth / remainBlock;
+
+		JLabel headDeterminationLabel = new BorderLabel("信念");
+		headDeterminationLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		headDeterminationLabel.setBounds(offsetX, 0, remainWidth / remainBlock, 30);
+		headPanel.add(headDeterminationLabel);
+		offsetX += remainWidth / remainBlock;
+
+		JLabel headSpeedLabel = new BorderLabel("咏唱速度");
+		headSpeedLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		headSpeedLabel.setBounds(offsetX, 0, remainWidth / remainBlock, 30);
+		headPanel.add(headSpeedLabel);
+		offsetX += remainWidth / remainBlock;
+
+		JLabel headExtraLabel = new BorderLabel("信仰");
+		headExtraLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		headExtraLabel.setBounds(offsetX, 0, remainWidth / remainBlock, 30);
+		headPanel.add(headExtraLabel);
+		offsetX += remainWidth / remainBlock;
 	}
 
 	private void initGlobal(Font font) {
