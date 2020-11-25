@@ -317,14 +317,14 @@ public class MainWindow {
 		filterBtn.setBounds(379, 12, 113, 27);
 		filterPanel.add(filterBtn);
 
-		JPanel equipmentPanel = new JPanel();
-		equipmentPanel.setBounds(10, 60, frame.getWidth() - 300 - 10, frame.getHeight() - 60 - TITLE_HEIGHT);
-		frame.getContentPane().add(equipmentPanel);
-		equipmentPanel.setLayout(null);
+		JPanel simulatorPanel = new JPanel();
+		simulatorPanel.setBounds(10, 60, frame.getWidth() - 300 - 10, frame.getHeight() - 60 - TITLE_HEIGHT);
+		frame.getContentPane().add(simulatorPanel);
+		simulatorPanel.setLayout(null);
 
 		JPanel headPanel = new JPanel();
-		headPanel.setBounds(0, 0, equipmentPanel.getWidth(), 30);
-		equipmentPanel.add(headPanel);
+		headPanel.setBounds(0, 0, simulatorPanel.getWidth(), 30);
+		simulatorPanel.add(headPanel);
 		headPanel.setLayout(null);
 
 		int offsetX = 0;
@@ -334,19 +334,19 @@ public class MainWindow {
 		headPanel.add(headNameLabel);
 		offsetX += headNameLabel.getWidth();
 
-//		JLabel headItemLevelLabel = new JLabel("level.505");
-//		headItemLevelLabel.setBounds(headNameLabel.getWidth() - 80, 0, 80, 30);
-//		headPanel.add(headItemLevelLabel);
+		//		JLabel headItemLevelLabel = new JLabel("level.505");
+		//		headItemLevelLabel.setBounds(headNameLabel.getWidth() - 80, 0, 80, 30);
+		//		headPanel.add(headItemLevelLabel);
 
 		final int remainWidth = headPanel.getWidth() - offsetX - 10;
 		final int remainBlock = 6;
-		
+
 		JLabel HeadMateriaLabel = new BorderLabel("魔晶石");
 		HeadMateriaLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		HeadMateriaLabel.setBounds(offsetX, 0, remainWidth / remainBlock, 30);
 		headPanel.add(HeadMateriaLabel);
 		offsetX += remainWidth / remainBlock;
-		
+
 		JLabel HeadCriticalHitLabel = new BorderLabel("暴击");
 		HeadCriticalHitLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		HeadCriticalHitLabel.setBounds(offsetX, 0, remainWidth / remainBlock, 30);
@@ -376,6 +376,18 @@ public class MainWindow {
 		headExtraLabel.setBounds(offsetX, 0, remainWidth / remainBlock, 30);
 		headPanel.add(headExtraLabel);
 		offsetX += remainWidth / remainBlock;
+
+		JPanel equipmentPanel = new BorderPanel();
+		equipmentPanel.setBounds(0, headPanel.getHeight(), simulatorPanel.getWidth(), 2000);
+		//		simulatorPanel.add(equipmentPanel);
+		equipmentPanel.setLayout(null);
+
+		JScrollPane mainPanel = new JScrollPane(equipmentPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		mainPanel.setBounds(0, headPanel.getHeight(), simulatorPanel.getWidth(),
+				simulatorPanel.getHeight() - headPanel.getHeight());
+		simulatorPanel.add(mainPanel);
+
 	}
 
 	private void initGlobal(Font font) {
