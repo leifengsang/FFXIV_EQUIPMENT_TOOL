@@ -118,25 +118,25 @@ public class Attr implements Cloneable {
 	public Attr(Materia<String, Integer> materia) throws Error {
 		switch (materia.getKey()) {
 		case Materia.CRITICAL_HIT:
-			this.criticalHit = materia.getValue();
+			this.criticalHit = Materia.ATTR_VALUE[materia.getValue()];
 			break;
 		case Materia.DIRECT_HIT:
-			this.directHit = materia.getValue();
+			this.directHit = Materia.ATTR_VALUE[materia.getValue()];
 			break;
 		case Materia.DETERMINATION:
-			this.determination = materia.getValue();
+			this.determination = Materia.ATTR_VALUE[materia.getValue()];
 			break;
 		case Materia.FAITH:
-			this.faith = materia.getValue();
+			this.faith = Materia.ATTR_VALUE[materia.getValue()];
 			break;
 		case Materia.SKILL_SPEED:
-			this.skillSpeed = materia.getValue();
+			this.skillSpeed = Materia.ATTR_VALUE[materia.getValue()];
 			break;
 		case Materia.SPELL_SPEED:
-			this.criticalHit = materia.getValue();
+			this.criticalHit = Materia.ATTR_VALUE[materia.getValue()];
 			break;
 		case Materia.FORTITUDE:
-			this.fortitude = materia.getValue();
+			this.fortitude = Materia.ATTR_VALUE[materia.getValue()];
 			break;
 		default:
 			throw new Error("属性错误！");
