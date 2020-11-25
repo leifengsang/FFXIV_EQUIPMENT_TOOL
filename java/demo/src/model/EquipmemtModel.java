@@ -47,16 +47,24 @@ public class EquipmemtModel {
 		try {
 			while (ret.next()) {
 				Equipment equipment = new Equipment();
-				equipment.setId(SQLHelper.getIntValue(ret, "id"));
+				equipment.setId(SQLHelper.getStringValue(ret, "id"));
 				equipment.setName(SQLHelper.getStringValue(ret, "name"));
 				equipment.setPosition(SQLHelper.getIntValue(ret, "position"));
 				equipment.setType(SQLHelper.getIntValue(ret, "type"));
 				List<Class<? extends Job>> enableJobList = new ArrayList<>();
 				String enableJobString = SQLHelper.getStringValue(ret, "enableJobList");
-				String[] jobs = enableJobString.split("#");
-				for (String job : jobs) {
-					Class<?> clazz = Class.forName("meta." + job);
-					if (clazz.isAssignableFrom(Job.class)) {
+				if (enableJobString.equals("ALL")) {
+					for (String job : Job_LIST) {
+						Class<?> clazz = Class.forName("meta." + job);
+						enableJobList.add((Class<? extends Job>) clazz);
+					}
+				} else {
+					String[] jobs = enableJobString.split("#");
+					for (String job : jobs) {
+						if (job.equals("")) {
+							continue;
+						}
+						Class<?> clazz = Class.forName("meta." + job);
 						enableJobList.add((Class<? extends Job>) clazz);
 					}
 				}
@@ -75,7 +83,7 @@ public class EquipmemtModel {
 
 			}
 		} catch (Exception e) {
-			System.out.println("从数据库加载装备数据失败:" + e.getMessage());
+			System.out.println("从数据库加载装备数据失败！ type:" + e.getClass().getName() + ", error:" + e.getMessage());
 		}
 	}
 

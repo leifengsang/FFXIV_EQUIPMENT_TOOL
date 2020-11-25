@@ -22,7 +22,7 @@ public class SQLHelper {
 
 	private ResultSet resultSet;
 
-	private String dbPath = "tool.db";
+	private String dbPath = "../../tool.db";
 
 	private SQLHelper() {
 
@@ -34,7 +34,8 @@ public class SQLHelper {
 				Class.forName("org.sqlite.JDBC");
 				connection = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
 			} catch (Exception e) {
-				System.out.println("�������ݿ�ʧ�ܣ�");
+				e.printStackTrace();
+				System.out.println("连接数据库失败！ type:"+ e.getClass().getName() + ", error:" + e.getMessage());
 			}
 		}
 		return connection;
@@ -45,7 +46,7 @@ public class SQLHelper {
 			resultSet = getStatement().executeQuery(sql);
 			return resultSet;
 		} catch (Exception e) {
-			System.out.println("ִ��sqlʧ�ܣ�" + e.getMessage());
+			System.out.println("ִ执行sql失败！sql:" + sql + ",type:" + e.getClass().getName() + ", error:" + e.getMessage());
 			return null;
 		}
 	}

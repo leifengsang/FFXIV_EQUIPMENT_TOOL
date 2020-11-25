@@ -47,7 +47,7 @@ public class Equipment {
 	/**
 	 * 装备ID
 	 */
-	private int id;
+	private String id;
 
 	/**
 	 * 装备名称
@@ -87,11 +87,11 @@ public class Equipment {
 	 */
 	private ArrayList<Materia<String, Integer>> materiaList = new ArrayList<>();
 
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -140,11 +140,11 @@ public class Equipment {
 	/**
 	 * TODO:后续在别的地方写一个判断主手是否支持副手
 	 * 目前支持的有：单手法杖、骑士剑
-	 * 暂不考虑单手法杖、只需判断Job.EquipmentMap.get(Equipment.POS_ARMS).enableJobList.contains(PLD.class)
+	 * 暂不考虑单手法杖、只需判断this.enableJobList.contains(PLD.class)
 	 * @return
 	 */
 	public boolean isEnableSecondary() {
-		return false;
+		return enableJobList.contains(PLD.class);
 	}
 
 	public int getLevel() {
