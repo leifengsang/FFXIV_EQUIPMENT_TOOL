@@ -6,7 +6,15 @@ import java.util.HashMap;
  * 特职
  * @author Cookies
  */
-public class Job {
+public abstract class Job {
+
+	public static final int DAMAGE_TYPE_PHYCICAL = 1; //物理
+	public static final int DAMAGE_TYPE_MAGIC = 2; //魔法
+
+	public static final int EXTRA_ATTR_TYPE_NULL = 10; //无
+	public static final int EXTRA_ATTR_TYPE_FAITH = 11; // 信仰
+	public static final int EXTRA_ATTR_TYPE_FORTITUDE = 12; //坚韧
+
 	protected Attr attr = new Attr();
 
 	protected HashMap<Integer, Equipment> equipmentMap = new HashMap<>();
@@ -16,6 +24,7 @@ public class Job {
 	}
 
 	public Attr getAttr() {
+		calAttr();
 		return attr;
 	}
 
@@ -26,6 +35,44 @@ public class Job {
 		attr.init();
 		for (Equipment equipment : equipmentMap.values()) {
 			attr.add(equipment.getAttr());
+		}
+	}
+
+	public boolean isEnableSecondary() {
+		return false;
+	}
+
+	public abstract int getDamageType();
+
+	public abstract int getExtraAttrType();
+
+	/**
+	 * 根据职业获得技速/唱速
+	 * @return
+	 */
+	public int getSpeed() {
+		switch (this.getDamageType()) {
+		case DAMAGE_TYPE_PHYCICAL:
+			return this.attr.getSkillSpeed();
+		case DAMAGE_TYPE_MAGIC:
+			return this.attr.getSkillSpeed();
+		default:
+			return -1;
+		}
+	}
+
+	/**
+	 * 根据职业获得信仰/坚韧
+	 * @return
+	 */
+	public int getExtraAttr() {
+		switch (this.getExtraAttrType()) {
+		case EXTRA_ATTR_TYPE_FAITH:
+			return this.attr.getFaith();
+		case EXTRA_ATTR_TYPE_FORTITUDE:
+			return this.attr.getFortitude();
+		default:
+			return -1;
 		}
 	}
 
@@ -40,8 +87,7 @@ public class Job {
 		}
 
 		if (equipment.getPosition() == Equipment.POS_SECONDARY) {
-			Equipment arms = equipmentMap.get(Equipment.POS_ARMS);
-			if (arms == null || !arms.isEnableSecondary()) {
+			if (!isEnableSecondary()) {
 				System.out.println("主武器未装备或不支持副手！");
 				return;
 			}

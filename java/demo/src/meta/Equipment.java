@@ -137,16 +137,6 @@ public class Equipment {
 		this.position = position;
 	}
 
-	/**
-	 * TODO:后续在别的地方写一个判断主手是否支持副手
-	 * 目前支持的有：单手法杖、骑士剑
-	 * 暂不考虑单手法杖、只需判断this.enableJobList.contains(PLD.class)
-	 * @return
-	 */
-	public boolean isEnableSecondary() {
-		return enableJobList.contains(PLD.class);
-	}
-
 	public int getLevel() {
 		return level;
 	}
@@ -173,5 +163,21 @@ public class Equipment {
 
 	public void setType(int type) {
 		this.type = type;
+	}
+
+	/**
+	 * 一键装备不可能同时拥有技速和唱速，所以直接取max
+	 * @return
+	 */
+	public int getSpeed() {
+		return Math.max(this.attr.getSkillSpeed(), this.attr.getSpellSpeed());
+	}
+
+	/**
+	 * 一键装备不可能同时拥有信仰和坚韧，所以直接取max
+	 * @return
+	 */
+	public int getExtra() {
+		return Math.max(this.attr.getFaith(), this.attr.getFortitude());
 	}
 }
