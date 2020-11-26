@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -8,28 +9,83 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
+import meta.Attr;
+import meta.Equipment;
+import meta.Job;
 import model.EquipmemtModel;
-import javax.swing.JScrollPane;
 
 public class MainWindow {
 
 	private static final int TITLE_HEIGHT = 35;
+	public static final int HEAD_NAME_WIDTH = 500;
+
+	private Map<Integer, List<Equipment>> equipmentMap = new HashMap<Integer, List<Equipment>>();
+	private Map<String, Equipment> nameMap = new HashMap<>();
+	private Job currentJob;
+	private int offsetY = 0;
+	private static final int SINGLE_PART_HEIGHT = 20;
 
 	private JFrame frame;
 	private JTextField floorInput;
 	private JTextField ceilInput;
+
+	private JPanel equipmentPanel;
+
+	private JLabel criticalHitNumLabel;
+	private JLabel criticalHitThresholdNumLabel;
+	private JLabel criticalHitRateNumLabel;
+	private JLabel nextCriticalHitRateNumLabel;
+	private JLabel nextCriticalHitRateLabel;
+
+	private JLabel directHitNumLabel;
+	private JLabel directHitThresholdNumLabel;
+	private JLabel directHitRateNumLabel;
+	private JLabel nextDirectHitThresholdNumLabel;
+	private JLabel nextDirectHitRateNumLabel;
+
+	private JLabel determinationNumLabel;
+	private JLabel determinationThresholdNumLabel;
+	private JLabel determinationRateNumLabel;
+	private JLabel nextDeterminationThresholdNumLabel;
+	private JLabel nextDeterminationRateNumLabel;
+
+	private JLabel speedLabel;
+	private JLabel speedNumLabel;
+	private JLabel speedThresholdNumLabel;
+	private JLabel gcdNumLabel;
+	private JLabel nextSpeedThresholdNumLabel;
+	private JLabel nextGcdNumLabel;
+
+	private JPanel extraPanel;
+	private JLabel extraLabel;
+	private JLabel extraNumLabel;
+	private JLabel extraThresholdNumLabel;
+	private JLabel extraRateLabel;
+	private JLabel extraRateNumLabel;
+	private JLabel nextExtraThresholdNumLabel;
+	private JLabel nextExtraRateLabel;
+	private JLabel nextExtraRateNumLabel;
+
+	private JLabel headSpeedLabel;
+	private JLabel headExtraLabel;
 
 	/**
 	 * Launch the application.
@@ -79,32 +135,32 @@ public class MainWindow {
 		JLabel criticalHitLabel = new JLabel("暴击  ");
 		criticalHitPanel.add(criticalHitLabel);
 
-		JLabel criticalHitNumLabel = new JLabel("暴击（值）");
+		criticalHitNumLabel = new JLabel("0");
 		criticalHitPanel.add(criticalHitNumLabel);
 
 		JLabel criticalHitThresholdLabel = new JLabel("当前阈值");
 		criticalHitPanel.add(criticalHitThresholdLabel);
 
-		JLabel criticalHitThresholdNumLabel = new JLabel("当前阈值（值）");
+		criticalHitThresholdNumLabel = new JLabel("0");
 		criticalHitPanel.add(criticalHitThresholdNumLabel);
 
 		JLabel criticalHitRateLabel = new JLabel("暴击率");
 		criticalHitPanel.add(criticalHitRateLabel);
 
-		JLabel criticalHitRateNumLabel = new JLabel("暴击率（值）");
+		criticalHitRateNumLabel = new JLabel("0");
 		criticalHitPanel.add(criticalHitRateNumLabel);
 
 		JLabel nextCriticalHitThresholdLabel = new JLabel("下一档阈值");
 		criticalHitPanel.add(nextCriticalHitThresholdLabel);
 
+		nextCriticalHitRateNumLabel = new JLabel("0");
+		criticalHitPanel.add(nextCriticalHitRateNumLabel);
+
 		JLabel nextCriticalHitThresholdNumLabel = new JLabel("下一档阈值（值）");
 		criticalHitPanel.add(nextCriticalHitThresholdNumLabel);
 
-		JLabel nextCriticalHitRateLabel = new JLabel("暴击率");
+		nextCriticalHitRateLabel = new JLabel("0");
 		criticalHitPanel.add(nextCriticalHitRateLabel);
-
-		JLabel nextCriticalHitRateNumLabel = new JLabel("暴击率（值）");
-		criticalHitPanel.add(nextCriticalHitRateNumLabel);
 
 		JPanel directHitPanel = new BorderPanel();
 		attrPanel.add(directHitPanel);
@@ -113,31 +169,31 @@ public class MainWindow {
 		JLabel directHitLabel = new JLabel("直击");
 		directHitPanel.add(directHitLabel);
 
-		JLabel directHitNumLabel = new JLabel("直击（值）");
+		directHitNumLabel = new JLabel("0");
 		directHitPanel.add(directHitNumLabel);
 
 		JLabel directHitThresholdLabel = new JLabel("当前阈值");
 		directHitPanel.add(directHitThresholdLabel);
 
-		JLabel directHitThresholdNumLabel = new JLabel("当前阈值（值）");
+		directHitThresholdNumLabel = new JLabel("0");
 		directHitPanel.add(directHitThresholdNumLabel);
 
 		JLabel directHitRateLabel = new JLabel("直击率");
 		directHitPanel.add(directHitRateLabel);
 
-		JLabel directHitRateNumLabel = new JLabel("直击率（值）");
+		directHitRateNumLabel = new JLabel("0");
 		directHitPanel.add(directHitRateNumLabel);
 
 		JLabel nextDirectHitThresholdLabel = new JLabel("下一档阈值");
 		directHitPanel.add(nextDirectHitThresholdLabel);
 
-		JLabel nextDirectHitThresholdNumLabel = new JLabel("下一档阈值（值）");
+		nextDirectHitThresholdNumLabel = new JLabel("0");
 		directHitPanel.add(nextDirectHitThresholdNumLabel);
 
 		JLabel nextDirectHitRateLabel = new JLabel("直击率");
 		directHitPanel.add(nextDirectHitRateLabel);
 
-		JLabel nextDirectHitRateNumLabel = new JLabel("直击率（值）");
+		nextDirectHitRateNumLabel = new JLabel("0");
 		directHitPanel.add(nextDirectHitRateNumLabel);
 
 		JPanel determinationPanel = new BorderPanel();
@@ -147,99 +203,99 @@ public class MainWindow {
 		JLabel determinationLabel = new JLabel("信念");
 		determinationPanel.add(determinationLabel);
 
-		JLabel determinationNumLabel = new JLabel("信念（值）");
+		determinationNumLabel = new JLabel("0");
 		determinationPanel.add(determinationNumLabel);
 
 		JLabel determinationThresholdLabel = new JLabel("当前阈值");
 		determinationPanel.add(determinationThresholdLabel);
 
-		JLabel determinationThresholdNumLabel = new JLabel("当前阈值（值）");
+		determinationThresholdNumLabel = new JLabel("0");
 		determinationPanel.add(determinationThresholdNumLabel);
 
 		JLabel determinationRateLabel = new JLabel("增伤比");
 		determinationPanel.add(determinationRateLabel);
 
-		JLabel determinationRateNumLabel = new JLabel("增伤比（值）");
+		determinationRateNumLabel = new JLabel("0");
 		determinationPanel.add(determinationRateNumLabel);
 
 		JLabel nextDeterminationThresholdLabel = new JLabel("下一档阈值");
 		determinationPanel.add(nextDeterminationThresholdLabel);
 
-		JLabel nextDeterminationThresholdNumLabel = new JLabel("下一档阈值（值）");
+		nextDeterminationThresholdNumLabel = new JLabel("0");
 		determinationPanel.add(nextDeterminationThresholdNumLabel);
 
 		JLabel nextDeterminationHitRateLabel = new JLabel("增伤比");
 		determinationPanel.add(nextDeterminationHitRateLabel);
 
-		JLabel nextDeterminationRateNumLabel = new JLabel("增伤比（值）");
+		nextDeterminationRateNumLabel = new JLabel("0");
 		determinationPanel.add(nextDeterminationRateNumLabel);
 
 		JPanel speedPanel = new BorderPanel();
 		attrPanel.add(speedPanel);
 		speedPanel.setLayout(new GridLayout(0, 2, 0, 0));
 
-		JLabel speedLabel = new JLabel("技能速度");
+		speedLabel = new JLabel("技能速度");
 		speedPanel.add(speedLabel);
 
-		JLabel speedNumLabel = new JLabel("技能速度（值）");
+		speedNumLabel = new JLabel("0");
 		speedPanel.add(speedNumLabel);
 
 		JLabel speedThresholdLabel = new JLabel("当前阈值");
 		speedPanel.add(speedThresholdLabel);
 
-		JLabel speedThresholdNumLabel = new JLabel("当前阈值（值）");
+		speedThresholdNumLabel = new JLabel("0");
 		speedPanel.add(speedThresholdNumLabel);
 
 		JLabel gcdLabel = new JLabel("复唱时间");
 		speedPanel.add(gcdLabel);
 
-		JLabel gcdNumLabel = new JLabel("复唱时间（值）");
+		gcdNumLabel = new JLabel("0");
 		speedPanel.add(gcdNumLabel);
 
 		JLabel nextSpeedThresholdLabel = new JLabel("下一档阈值");
 		speedPanel.add(nextSpeedThresholdLabel);
 
-		JLabel nextSpeedThresholdNumLabel = new JLabel("下一档阈值（值）");
+		nextSpeedThresholdNumLabel = new JLabel("0");
 		speedPanel.add(nextSpeedThresholdNumLabel);
 
 		JLabel nextGcdLabel = new JLabel("复唱时间");
 		speedPanel.add(nextGcdLabel);
 
-		JLabel nextGcdNumLabel = new JLabel("复唱时间（值）");
+		nextGcdNumLabel = new JLabel("0");
 		speedPanel.add(nextGcdNumLabel);
 
-		JPanel extraPanel = new BorderPanel();
+		extraPanel = new BorderPanel();
 		attrPanel.add(extraPanel);
 		extraPanel.setLayout(new GridLayout(0, 2, 0, 0));
 
-		JLabel extraLabel = new JLabel("信仰");
+		extraLabel = new JLabel("信仰");
 		extraPanel.add(extraLabel);
 
-		JLabel extraNumLabel = new JLabel("信仰（值）");
+		extraNumLabel = new JLabel("0");
 		extraPanel.add(extraNumLabel);
 
 		JLabel extraThresholdLabel = new JLabel("当前阈值");
 		extraPanel.add(extraThresholdLabel);
 
-		JLabel extraThresholdNumLabel = new JLabel("当前阈值（值）");
+		extraThresholdNumLabel = new JLabel("0");
 		extraPanel.add(extraThresholdNumLabel);
 
-		JLabel extraRateLabel = new JLabel("每3秒回蓝");
+		extraRateLabel = new JLabel("每3秒回蓝");
 		extraPanel.add(extraRateLabel);
 
-		JLabel extraRateNumLabel = new JLabel("每3秒回蓝（值）");
+		extraRateNumLabel = new JLabel("0");
 		extraPanel.add(extraRateNumLabel);
 
 		JLabel nextExtraThresholdLabel = new JLabel("下一档阈值");
 		extraPanel.add(nextExtraThresholdLabel);
 
-		JLabel nextExtraThresholdNumLabel = new JLabel("下一档阈值（值）");
+		nextExtraThresholdNumLabel = new JLabel("0");
 		extraPanel.add(nextExtraThresholdNumLabel);
 
-		JLabel nextExtraRateLabel = new JLabel("每3秒回蓝");
+		nextExtraRateLabel = new JLabel("每3秒回蓝");
 		extraPanel.add(nextExtraRateLabel);
 
-		JLabel nextExtraRateNumLabel = new JLabel("每3秒回蓝（值）");
+		nextExtraRateNumLabel = new JLabel("0");
 		extraPanel.add(nextExtraRateNumLabel);
 
 		JPanel filterPanel = new JPanel();
@@ -259,6 +315,7 @@ public class MainWindow {
 		filterPanel.add(jobLabel);
 
 		floorInput = new JTextField();
+		floorInput.setText("500");
 		floorInput.addKeyListener(new KeyAdapter() {
 			public void keyTyped(KeyEvent e) {
 				if (floorInput.getText().length() > 3) {
@@ -283,6 +340,7 @@ public class MainWindow {
 		filterPanel.add(splitLabel);
 
 		ceilInput = new JTextField();
+		ceilInput.setText("505");
 		ceilInput.addKeyListener(new KeyAdapter() {
 			public void keyTyped(KeyEvent e) {
 				if (ceilInput.getText().length() > 3) {
@@ -312,6 +370,8 @@ public class MainWindow {
 					JOptionPane.showMessageDialog(null, "输入错误", "输入错误", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
+				doFilter((String) jobComboBox.getSelectedItem(), Integer.valueOf(floorInput.getText()),
+						Integer.valueOf(ceilInput.getText()));
 			}
 		});
 		filterBtn.setBounds(379, 12, 113, 27);
@@ -330,59 +390,59 @@ public class MainWindow {
 		int offsetX = 0;
 		JLabel headNameLabel = new BorderLabel("名称");//最长的名字：レプリカ・スカイラット・ストライカーフィンガレスグローブ
 		headNameLabel.setHorizontalAlignment(SwingConstants.CENTER);//具体的装备界面需要更改为left
-		headNameLabel.setBounds(0, 0, 500, 30);
+		headNameLabel.setBounds(0, 0, HEAD_NAME_WIDTH, 30);
 		headPanel.add(headNameLabel);
 		offsetX += headNameLabel.getWidth();
 
-		//		JLabel headItemLevelLabel = new JLabel("level.505");
-		//		headItemLevelLabel.setBounds(headNameLabel.getWidth() - 80, 0, 80, 30);
-		//		headPanel.add(headItemLevelLabel);
-
-		final int remainWidth = headPanel.getWidth() - offsetX - 10;
+		final int remainWidth = headPanel.getWidth() - offsetX - 14;
 		final int remainBlock = 6;
+		final int singleWidth = remainWidth / remainBlock;
 
 		JLabel HeadMateriaLabel = new BorderLabel("魔晶石");
 		HeadMateriaLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		HeadMateriaLabel.setBounds(offsetX, 0, remainWidth / remainBlock, 30);
+		HeadMateriaLabel.setBounds(offsetX, 0, singleWidth, 30);
 		headPanel.add(HeadMateriaLabel);
-		offsetX += remainWidth / remainBlock;
+		offsetX += singleWidth;
 
 		JLabel HeadCriticalHitLabel = new BorderLabel("暴击");
 		HeadCriticalHitLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		HeadCriticalHitLabel.setBounds(offsetX, 0, remainWidth / remainBlock, 30);
+		HeadCriticalHitLabel.setBounds(offsetX, 0, singleWidth, 30);
 		headPanel.add(HeadCriticalHitLabel);
-		offsetX += remainWidth / remainBlock;
+		offsetX += singleWidth;
 
 		JLabel headDirectHitLabel = new BorderLabel("直击");
 		headDirectHitLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		headDirectHitLabel.setBounds(offsetX, 0, remainWidth / remainBlock, 30);
+		headDirectHitLabel.setBounds(offsetX, 0, singleWidth, 30);
 		headPanel.add(headDirectHitLabel);
-		offsetX += remainWidth / remainBlock;
+		offsetX += singleWidth;
 
 		JLabel headDeterminationLabel = new BorderLabel("信念");
 		headDeterminationLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		headDeterminationLabel.setBounds(offsetX, 0, remainWidth / remainBlock, 30);
+		headDeterminationLabel.setBounds(offsetX, 0, singleWidth, 30);
 		headPanel.add(headDeterminationLabel);
-		offsetX += remainWidth / remainBlock;
+		offsetX += singleWidth;
 
-		JLabel headSpeedLabel = new BorderLabel("咏唱速度");
+		headSpeedLabel = new BorderLabel("咏唱速度");
 		headSpeedLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		headSpeedLabel.setBounds(offsetX, 0, remainWidth / remainBlock, 30);
+		headSpeedLabel.setBounds(offsetX, 0, singleWidth, 30);
 		headPanel.add(headSpeedLabel);
-		offsetX += remainWidth / remainBlock;
+		offsetX += singleWidth;
 
-		JLabel headExtraLabel = new BorderLabel("信仰");
+		headExtraLabel = new BorderLabel("信仰");
 		headExtraLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		headExtraLabel.setBounds(offsetX, 0, remainWidth / remainBlock, 30);
+		headExtraLabel.setBounds(offsetX, 0, singleWidth, 30);
 		headPanel.add(headExtraLabel);
-		offsetX += remainWidth / remainBlock;
+		offsetX += singleWidth;
 
-		JPanel equipmentPanel = new BorderPanel();
-		equipmentPanel.setBounds(0, headPanel.getHeight(), simulatorPanel.getWidth(), 2000);
-		//		simulatorPanel.add(equipmentPanel);
+		equipmentPanel = new JPanel();
+		equipmentPanel.setBackground(new Color(204, 232, 207));
+		equipmentPanel.setBounds(0, headPanel.getHeight(), simulatorPanel.getWidth(), 0);
 		equipmentPanel.setLayout(null);
 
-		JScrollPane mainPanel = new JScrollPane(equipmentPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+		doFilter((String) jobComboBox.getSelectedItem(), Integer.parseInt(floorInput.getText()),
+				Integer.parseInt(ceilInput.getText()));
+
+		JScrollPane mainPanel = new JScrollPane(equipmentPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		mainPanel.setBounds(0, headPanel.getHeight(), simulatorPanel.getWidth(),
 				simulatorPanel.getHeight() - headPanel.getHeight());
@@ -408,6 +468,150 @@ public class MainWindow {
 			if (value instanceof Font) {
 				UIManager.put(key, font);
 			}
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private void doFilter(String job, int floor, int ceil) {
+		initEquipment();
+		Class<? extends Job> clazz = null;
+		try {
+			clazz = (Class<? extends Job>) Class.forName("meta." + job);
+			currentJob = clazz.newInstance();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		List<Equipment> equipmentList = EquipmemtModel.getInstance().getEquipmentList();
+		for (Equipment equipment : equipmentList) {
+			if (equipment.getPosition() == -1) {
+				continue;
+			}
+
+			if (!equipment.getEnableJobList().contains(clazz)) {
+				continue;
+			}
+			int level = equipment.getLevel();
+			if (!(level >= floor && level <= ceil)) {
+				continue;
+			}
+			equipment.getMateriaList().clear();
+			equipmentMap.get(equipment.getPosition()).add(equipment);
+			nameMap.put(equipment.getName(), equipment);
+		}
+		layoutAttrPanel();
+		calAttr();
+		layoutEquipmentPanel();
+	}
+
+	private void layoutAttrPanel() {
+		//设置技速/唱速
+		if (currentJob.getDamageType() == Job.DAMAGE_TYPE_PHYCICAL) {
+			speedLabel.setText("技能速度");
+			headSpeedLabel.setText("技能速度");
+		} else {
+			speedLabel.setText("咏唱速度");
+			headSpeedLabel.setText("咏唱速度");
+		}
+
+		//设置额外属性
+		switch (currentJob.getExtraAttrType()) {
+		case Job.EXTRA_ATTR_TYPE_FAITH:
+			extraPanel.setVisible(true);
+			headExtraLabel.setVisible(true);
+			extraLabel.setText("信仰");
+			extraRateLabel.setText("每三秒回蓝");
+			nextExtraRateLabel.setText("每三秒回蓝");
+			headExtraLabel.setText("信仰");
+			break;
+		case Job.EXTRA_ATTR_TYPE_FORTITUDE:
+			extraPanel.setVisible(true);
+			headExtraLabel.setVisible(true);
+			extraLabel.setText("坚韧");
+			extraRateLabel.setText("增减伤比");
+			nextExtraRateLabel.setText("增减伤比");
+			headExtraLabel.setText("坚韧");
+			break;
+		default:
+			extraPanel.setVisible(false);
+			headExtraLabel.setVisible(false);
+		}
+	}
+
+	private void calAttr() {
+		Attr attr = currentJob.getAttr();
+		criticalHitNumLabel.setText(String.valueOf(attr.getCriticalHit()));
+		directHitNumLabel.setText(String.valueOf(attr.getCriticalHit()));
+		determinationNumLabel.setText(String.valueOf(attr.getCriticalHit()));
+		speedNumLabel.setText(String.valueOf(currentJob.getSpeed()));
+		if (extraPanel.isVisible()) {
+			extraNumLabel.setText(String.valueOf(currentJob.getExtraAttr()));
+		}
+	}
+
+	private void initEquipment() {
+		for (int i = 1; i < Equipment.POS_LIMIT; i++) {
+			List<Equipment> list = equipmentMap.get(i);
+			if (list == null) {
+				list = new ArrayList<>();
+				equipmentMap.put(i, list);
+			} else {
+				list.clear();
+			}
+		}
+		nameMap.clear();
+	}
+
+	private void layoutEquipmentPanel() {
+		equipmentPanel.removeAll();
+		offsetY = 0;
+		layoutSinglePart("武器", 1);
+
+		if (currentJob.isEnableSecondary()) {
+			layoutSinglePart("副手", 2);
+		}
+
+		layoutSinglePart("头部", 3);
+
+		layoutSinglePart("身体", 4);
+
+		layoutSinglePart("手部", 5);
+
+		layoutSinglePart("腰部", 6);
+
+		layoutSinglePart("腿部", 7);
+
+		layoutSinglePart("脚部", 8);
+
+		layoutSinglePart("耳部", 9);
+
+		layoutSinglePart("颈部", 10);
+
+		layoutSinglePart("腕部", 11);
+
+		layoutSinglePart("戒指1", 12);
+
+		layoutSinglePart("戒指2", 12);
+
+		equipmentPanel.setPreferredSize(new Dimension(equipmentPanel.getWidth(), offsetY));
+		equipmentPanel.repaint();
+	}
+
+	private void layoutSinglePart(String title, int position) {
+		JLabel titleLabel = new BorderLabel(title);
+		titleLabel.setBounds(0, offsetY, equipmentPanel.getWidth(), SINGLE_PART_HEIGHT);
+		titleLabel.setFont(new Font("alias", Font.PLAIN, 16));
+		equipmentPanel.add(titleLabel);
+		offsetY += SINGLE_PART_HEIGHT;
+
+		ButtonGroup group = new ButtonGroup();
+		List<Equipment> list = equipmentMap.get(position);
+		for (Equipment equipment : list) {
+			EquipmentPanel ePanel = new EquipmentPanel(currentJob, equipment,
+					currentJob.getExtraAttrType() != Job.EXTRA_ATTR_TYPE_NULL);
+			ePanel.setLocation(0, offsetY);
+			equipmentPanel.add(ePanel);
+			offsetY += ePanel.getHeight();
+			group.add(ePanel.getNameBtn());
 		}
 	}
 }
