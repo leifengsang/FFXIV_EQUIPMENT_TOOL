@@ -5,6 +5,7 @@ import java.awt.Color;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 
+@SuppressWarnings("serial")
 public class BorderLabel extends JLabel {
 	
 	public BorderLabel(String text){

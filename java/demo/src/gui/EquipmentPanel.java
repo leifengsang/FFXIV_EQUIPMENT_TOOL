@@ -1,25 +1,26 @@
 package gui;
 
 import java.awt.Color;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.SwingConstants;
 
 import meta.Equipment;
-import meta.Job;
 
+@SuppressWarnings("serial")
 public class EquipmentPanel extends JPanel {
 
-	private Job job;
 	private Equipment equipment;
 
 	private JRadioButton nameBtn;
-	private JLabel materiaLabel;
+	private JButton materiaBtn;
 	private JLabel criticalHitLabel;
 	private JLabel directHitLabel;
 	private JLabel determinationLabel;
@@ -32,6 +33,10 @@ public class EquipmentPanel extends JPanel {
 
 	public JRadioButton getNameBtn() {
 		return nameBtn;
+	}
+
+	public JButton getMateriaBtn() {
+		return materiaBtn;
 	}
 
 	public void setEquipment(Equipment equipment) {
@@ -65,9 +70,8 @@ public class EquipmentPanel extends JPanel {
 		extraLabel.setText(String.valueOf(extra));
 	}
 
-	public EquipmentPanel(Job job, Equipment equipment, boolean hasExtra) {
+	public EquipmentPanel(Equipment equipment, boolean hasExtra) {
 		super();
-		this.job = job;
 		this.equipment = equipment;
 		init(hasExtra);
 	}
@@ -80,29 +84,18 @@ public class EquipmentPanel extends JPanel {
 		nameBtn = new JRadioButton(String.format("[%d]", equipment.getLevel()) + equipment.getName());
 		nameBtn.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		nameBtn.setBounds(offsetX, 0, MainWindow.HEAD_NAME_WIDTH, this.getHeight());
-		nameBtn.addItemListener(new ItemListener() {
-
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				if (e.getSource() == nameBtn && nameBtn.isSelected()) {
-					job.equip(equipment);
-				}
-			}
-		});
-		;
 		this.add(nameBtn);
 		offsetX += MainWindow.HEAD_NAME_WIDTH;
 
+		materiaBtn = new JButton("点击查看");
+		materiaBtn.setBounds(offsetX, 0, MainWindow.HEAD_MATERIA_WIDTH, this.getHeight());
+		materiaBtn.setHorizontalAlignment(SwingConstants.CENTER);
+		this.add(materiaBtn);
+		offsetX += MainWindow.HEAD_MATERIA_WIDTH;
+
 		final int remainWidth = this.getWidth() - offsetX - 14;
-		final int remainBlock = 6;
+		final int remainBlock = 5;
 		final int singleWidth = remainWidth / remainBlock;
-
-		materiaLabel = new BorderLabel("点击查看");
-		materiaLabel.setBounds(offsetX, 0, singleWidth, this.getHeight());
-		materiaLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		this.add(materiaLabel);
-		offsetX += singleWidth;
-
 		criticalHitLabel = new BorderLabel();
 		criticalHitLabel.setBounds(offsetX, 0, singleWidth, this.getHeight());
 		criticalHitLabel.setHorizontalAlignment(SwingConstants.CENTER);

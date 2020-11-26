@@ -5,10 +5,15 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -18,10 +23,12 @@ import java.util.Map;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -35,7 +42,8 @@ import model.EquipmemtModel;
 public class MainWindow {
 
 	private static final int TITLE_HEIGHT = 35;
-	public static final int HEAD_NAME_WIDTH = 500;
+	public static final int HEAD_NAME_WIDTH = 450;
+	public static final int HEAD_MATERIA_WIDTH = 100;
 
 	private Map<Integer, List<Equipment>> equipmentMap = new HashMap<Integer, List<Equipment>>();
 	private Map<String, Equipment> nameMap = new HashMap<>();
@@ -87,6 +95,9 @@ public class MainWindow {
 	private JLabel headSpeedLabel;
 	private JLabel headExtraLabel;
 
+	private int screenWidth;
+	private int screenHeight;
+
 	/**
 	 * Launch the application.
 	 */
@@ -116,9 +127,12 @@ public class MainWindow {
 	private void initialize() {
 		initGlobal(new Font("alias", Font.PLAIN, 14));
 
+		Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
+		screenWidth = (int) screensize.getWidth();
+		screenHeight = (int) screensize.getHeight();
 		frame = new JFrame();
 		frame.setTitle("配装模拟器");
-		frame.setBounds(100, 100, 1280, 960);
+		frame.setBounds((screenWidth - 1280) / 2, (screenHeight - 960) / 2, 1280, 960);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
 		frame.getContentPane().setLayout(null);
@@ -394,16 +408,15 @@ public class MainWindow {
 		headPanel.add(headNameLabel);
 		offsetX += headNameLabel.getWidth();
 
-		final int remainWidth = headPanel.getWidth() - offsetX - 14;
-		final int remainBlock = 6;
-		final int singleWidth = remainWidth / remainBlock;
-
 		JLabel HeadMateriaLabel = new BorderLabel("魔晶石");
 		HeadMateriaLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		HeadMateriaLabel.setBounds(offsetX, 0, singleWidth, 30);
+		HeadMateriaLabel.setBounds(offsetX, 0, HEAD_MATERIA_WIDTH, 30);
 		headPanel.add(HeadMateriaLabel);
-		offsetX += singleWidth;
+		offsetX += HEAD_MATERIA_WIDTH;
 
+		final int remainWidth = headPanel.getWidth() - offsetX - 14;
+		final int remainBlock = 5;
+		final int singleWidth = remainWidth / remainBlock;
 		JLabel HeadCriticalHitLabel = new BorderLabel("暴击");
 		HeadCriticalHitLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		HeadCriticalHitLabel.setBounds(offsetX, 0, singleWidth, 30);
@@ -446,8 +459,8 @@ public class MainWindow {
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		mainPanel.setBounds(0, headPanel.getHeight(), simulatorPanel.getWidth(),
 				simulatorPanel.getHeight() - headPanel.getHeight());
+		mainPanel.getVerticalScrollBar().setUnitIncrement(10);
 		simulatorPanel.add(mainPanel);
-
 	}
 
 	private void initGlobal(Font font) {
@@ -540,8 +553,8 @@ public class MainWindow {
 	private void calAttr() {
 		Attr attr = currentJob.getAttr();
 		criticalHitNumLabel.setText(String.valueOf(attr.getCriticalHit()));
-		directHitNumLabel.setText(String.valueOf(attr.getCriticalHit()));
-		determinationNumLabel.setText(String.valueOf(attr.getCriticalHit()));
+		directHitNumLabel.setText(String.valueOf(attr.getDirectHit()));
+		determinationNumLabel.setText(String.valueOf(attr.getDetermination()));
 		speedNumLabel.setText(String.valueOf(currentJob.getSpeed()));
 		if (extraPanel.isVisible()) {
 			extraNumLabel.setText(String.valueOf(currentJob.getExtraAttr()));
@@ -606,12 +619,41 @@ public class MainWindow {
 		ButtonGroup group = new ButtonGroup();
 		List<Equipment> list = equipmentMap.get(position);
 		for (Equipment equipment : list) {
-			EquipmentPanel ePanel = new EquipmentPanel(currentJob, equipment,
+			EquipmentPanel ePanel = new EquipmentPanel(equipment,
 					currentJob.getExtraAttrType() != Job.EXTRA_ATTR_TYPE_NULL);
 			ePanel.setLocation(0, offsetY);
 			equipmentPanel.add(ePanel);
 			offsetY += ePanel.getHeight();
-			group.add(ePanel.getNameBtn());
+
+			JRadioButton radioBtn = ePanel.getNameBtn();
+			radioBtn.addItemListener(new ItemListener() {
+
+				@Override
+				public void itemStateChanged(ItemEvent e) {
+					if (radioBtn.isSelected()) {
+						String name = ((JRadioButton) e.getSource()).getText();
+						name = name.substring(name.indexOf(']') + 1);
+						Equipment currentEquipment = nameMap.get(name);
+						System.out.println(currentEquipment.getName() + ":" + currentEquipment.getAttr());
+						currentJob.equip(currentEquipment);
+						calAttr();
+					}
+				}
+			});
+
+			JButton materiaBtn = ePanel.getMateriaBtn();
+			materiaBtn.addMouseListener(new MouseAdapter() {
+
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					JDialog dialog = new JDialog(MainWindow.this.frame, true);
+					dialog.setBounds((screenWidth - 300) / 2, (screenHeight - 200) / 2, 300, 200);
+					dialog.setVisible(true);
+				}
+
+			});
+
+			group.add(radioBtn);
 		}
 	}
 }
