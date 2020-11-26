@@ -204,4 +204,16 @@ public class Attr implements Cloneable {
 	public Object clone() throws CloneNotSupportedException {
 		return super.clone();
 	}
+
+	@Override
+	public String toString() {
+		return "暴击:" + criticalHit
+				+ ", 直击:" + directHit
+				+ ", 信念:" + determination
+				+ ", 技速:" + skillSpeed
+				+ ", 唱速:"+ spellSpeed
+				+ ", 信仰:" + faith
+				+ ", 坚韧:" + fortitude;
+	}
+
 }
