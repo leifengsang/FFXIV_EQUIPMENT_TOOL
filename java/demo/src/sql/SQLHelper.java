@@ -84,9 +84,6 @@ public class SQLHelper {
 
 	public static int getIntValue(ResultSet resultSet, String column) throws NumberFormatException, SQLException {
 		String str = resultSet.getString(column);
-		if (str.equals("")) {
-			return 0;
-		}
 		return Integer.parseInt(str);
 	}
 

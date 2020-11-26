@@ -51,6 +51,7 @@ public class EquipmemtModel {
 				equipment.setName(SQLHelper.getStringValue(ret, "name"));
 				equipment.setPosition(SQLHelper.getIntValue(ret, "position"));
 				equipment.setType(SQLHelper.getIntValue(ret, "type"));
+				equipment.setLevel(SQLHelper.getIntValue(ret, "level"));
 				List<Class<? extends Job>> enableJobList = new ArrayList<>();
 				String enableJobString = SQLHelper.getStringValue(ret, "enableJobList");
 				if (enableJobString.equals("ALL")) {
