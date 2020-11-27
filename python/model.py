@@ -7,6 +7,7 @@ class EquipmentModel(object):
     __url_dict = {}
     __equipment_list = []
     __equipment_dict = {}
+    __version = 3
 
     __db = None
 
@@ -84,7 +85,7 @@ class EquipmentModel(object):
         sql = sql_head + sql_values
         self.__db.execute(sql)
 
-    def update_equipment(self, equipment):
+    def insert_equipment(self, equipment):
         sql_head = 'insert into equipment values'
         sql_value = ''
         self.__add_equipment(equipment)
@@ -102,17 +103,32 @@ class EquipmentModel(object):
         sql_value += "'" + equipment.get('スキルスピード', 0) + "',"
         sql_value += "'" + equipment.get('スペルスピード', 0) + "',"
         sql_value += "'" + equipment.get('不屈', 0) + "'"
+        sql_value += str(equipment['normalSocket']) + ","
+        sql_value += str(equipment['moreSocket']) + ","
+        sql_value += "'" + equipment.get('VIT', 0) + "'"
         sql_value += ')'
         sql = sql_head + sql_value
         self.__db.execute(sql)
-        sql_update_url = "update url set done=1 where id=?"
-        self.__db.execute(sql_update_url, [equipment['id']])
+        sql_update_url = "update url set version=? where id=?"
+        self.__db.execute(sql_update_url, [self.__version, equipment['id']])
+        print('[{}]insert {} success!'.format(time.strftime("%H:%M:%S", time.localtime()), equipment['name']))
+
+    def update_equipment(self, equipment):
+        if self.__equipment_dict.get(equipment['id']) is None:
+            self.insert_equipment(equipment)
+            return
+        sql = 'update equipment set normalSocket=?, moreSocket=?, VIT=? where id=?'
+        self.__db.execute(sql,
+                          [equipment['normalSocket'], equipment['moreSocket'], equipment.get('VIT', 0),
+                           equipment['id']])
+        sql_update_url = "update url set version=? where id=?"
+        self.__db.execute(sql_update_url, [self.__version, equipment['id']])
         print('[{}]update {} success!'.format(time.strftime("%H:%M:%S", time.localtime()), equipment['name']))
 
     def get_url_undone(self):
         list = []
-        sql = 'select * from url where done=0'
-        result = self.__db.execute(sql)
+        sql = 'select * from url where version!=?'
+        result = self.__db.execute(sql, [self.__version])
         for row in result:
             url = {}
             url['id'] = row['id']

@@ -119,6 +119,11 @@ def update_equipment(tab_url):
             text = li.get_text()
             text_info = text.split(' ')
             equipment[text_info[0]] = text_info[1].strip('+')
+
+    # 魔晶石
+    equipment['normalSocket'] = len(soup.find_all('li', attrs={'class': 'socket normal'}))
+    equipment['moreSocket'] = 1 if soup.find('p', attrs={'class': 'db-view__cannot_materia_prohibition'}) is None and \
+                                   equipment['type'] == 3 else 0
     model.update_equipment(equipment)
 
 
