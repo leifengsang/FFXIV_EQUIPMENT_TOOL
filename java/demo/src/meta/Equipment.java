@@ -36,13 +36,15 @@ public class Equipment {
 
 	public static final int[] SUB_EQUIPMENT_LIST = { 6, 9, 10, 11, 12, 13 };
 
-	public static final int TYPE_HQ = 1; //绿
+	public static final int TYPE_PURPLE = 1; //紫
 
-	public static final int TYPE_UN_COMMON = 2; //白
+	public static final int TYPE_COMMON = 2; //蓝
 
-	public static final int TYPE_COMMON = 3; //蓝
+	public static final int TYPE_HQ = 3; //绿
 
-	public static final int TYPE_PURPLE = 4; //紫
+	public static final int TYPE_UN_COMMON = 4; //白
+
+	public static final int TYPE_MAGIC = 5; //粉
 
 	/**
 	 * 装备ID
@@ -81,6 +83,16 @@ public class Equipment {
 	 * 装等
 	 */
 	private int level;
+
+	/**
+	 * 普通镶嵌孔
+	 */
+	private int normalSocket;
+
+	/**
+	 * 是否可以禁断
+	 */
+	private boolean moreSocket;
 
 	/**
 	 * 魔晶石
@@ -165,12 +177,28 @@ public class Equipment {
 		this.type = type;
 	}
 
+	public int getNormalSocket() {
+		return normalSocket;
+	}
+
+	public void setNormalSocket(int normalSocket) {
+		this.normalSocket = normalSocket;
+	}
+
+	public boolean isMoreSocket() {
+		return moreSocket;
+	}
+
+	public void setMoreSocket(boolean moreSocket) {
+		this.moreSocket = moreSocket;
+	}
+
 	/**
 	 * 一键装备不可能同时拥有技速和唱速，所以直接取max
 	 * @return
 	 */
 	public int getSpeed() {
-		return Math.max(this.attr.getSkillSpeed(), this.attr.getSpellSpeed());
+		return Math.max(this.getAttr().getSkillSpeed(), this.getAttr().getSpellSpeed());
 	}
 
 	/**
@@ -178,6 +206,14 @@ public class Equipment {
 	 * @return
 	 */
 	public int getExtra() {
-		return Math.max(this.attr.getFaith(), this.attr.getFortitude());
+		return Math.max(this.getAttr().getFaith(), this.getAttr().getFortitude());
+	}
+
+	/**
+	 * 是一件战职装备
+	 * @return
+	 */
+	public boolean isBattle() {
+		return this.attr.getVIT() != 0;
 	}
 }

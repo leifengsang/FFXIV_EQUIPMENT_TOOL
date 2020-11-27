@@ -94,6 +94,5 @@ public abstract class Job {
 		}
 
 		equipmentMap.put(equipment.getPosition(), equipment);
-		calAttr();
 	}
 }

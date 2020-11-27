@@ -1,6 +1,7 @@
 package meta;
 
 public class Attr implements Cloneable {
+
 	private static final int BASE_CRITICAL_HIT = 380;
 
 	private static final int BASE_DIRECT_HIT = 380;
@@ -49,6 +50,11 @@ public class Attr implements Cloneable {
 	 * 坚韧
 	 */
 	private int fortitude;
+
+	/**
+	 * 耐力
+	 */
+	private int VIT;
 
 	public int getCriticalHit() {
 		return criticalHit;
@@ -104,6 +110,14 @@ public class Attr implements Cloneable {
 
 	public void setFortitude(int fortitude) {
 		this.fortitude = fortitude;
+	}
+
+	public int getVIT() {
+		return VIT;
+	}
+
+	public void setVIT(int VIT) {
+		this.VIT = VIT;
 	}
 
 	public Attr() {
@@ -207,13 +221,8 @@ public class Attr implements Cloneable {
 
 	@Override
 	public String toString() {
-		return "暴击:" + criticalHit
-				+ ", 直击:" + directHit
-				+ ", 信念:" + determination
-				+ ", 技速:" + skillSpeed
-				+ ", 唱速:"+ spellSpeed
-				+ ", 信仰:" + faith
-				+ ", 坚韧:" + fortitude;
+		return "暴击:" + criticalHit + ", 直击:" + directHit + ", 信念:" + determination + ", 技速:" + skillSpeed + ", 唱速:"
+				+ spellSpeed + ", 信仰:" + faith + ", 坚韧:" + fortitude + ", 耐力:" + VIT;
 	}
 
 }
