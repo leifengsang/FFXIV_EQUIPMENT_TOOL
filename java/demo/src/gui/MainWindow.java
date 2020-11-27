@@ -23,7 +23,6 @@ import java.util.Map;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -500,6 +499,10 @@ public class MainWindow {
 				continue;
 			}
 
+			if (!equipment.isBattle()) {
+				continue;
+			}
+
 			if (!equipment.getEnableJobList().contains(clazz)) {
 				continue;
 			}
@@ -634,7 +637,6 @@ public class MainWindow {
 						String name = ((JRadioButton) e.getSource()).getText();
 						name = name.substring(name.indexOf(']') + 1);
 						Equipment currentEquipment = nameMap.get(name);
-						System.out.println(currentEquipment.getName() + ":" + currentEquipment.getAttr());
 						currentJob.equip(currentEquipment);
 						calAttr();
 					}
@@ -646,9 +648,7 @@ public class MainWindow {
 
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					JDialog dialog = new JDialog(MainWindow.this.frame, true);
-					dialog.setBounds((screenWidth - 300) / 2, (screenHeight - 200) / 2, 300, 200);
-					dialog.setVisible(true);
+					new MateriaView(MainWindow.this.frame, equipment);
 				}
 
 			});
