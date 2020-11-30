@@ -2,13 +2,13 @@ package meta;
 
 /**
  * 战士
- * @author Cookies
+ * @author leifengsang
  */
 public class WAR extends Job {
 
 	@Override
 	public int getDamageType() {
-		return Job.DAMAGE_TYPE_PHYCICAL;
+		return Job.DAMAGE_TYPE_PHYSICAL;
 	}
 
 	@Override

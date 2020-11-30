@@ -2,7 +2,7 @@ package meta;
 
 /**
  * 黑魔法师
- * @author Cookies
+ * @author leifengsang
  */
 public class BLM extends Job {
 

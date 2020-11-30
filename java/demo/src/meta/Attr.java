@@ -182,6 +182,7 @@ public class Attr implements Cloneable {
 		this.skillSpeed += attr.getSkillSpeed();
 		this.spellSpeed += attr.getSpellSpeed();
 		this.fortitude += attr.getFortitude();
+		this.VIT += attr.VIT;
 	}
 
 	/**

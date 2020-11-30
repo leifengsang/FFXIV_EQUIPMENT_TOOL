@@ -2,7 +2,7 @@ package meta;
 
 /**
  * 骑士
- * @author Cookies
+ * @author leifengsang
  */
 public class PLD extends Job {
 
@@ -13,7 +13,7 @@ public class PLD extends Job {
 
 	@Override
 	public int getDamageType() {
-		return Job.DAMAGE_TYPE_PHYCICAL;
+		return Job.DAMAGE_TYPE_PHYSICAL;
 	}
 
 	@Override

@@ -2,7 +2,7 @@ package meta;
 
 /**
  * 占星术士
- * @author Cookies
+ * @author leifengsang
  */
 public class AST extends Job {
 

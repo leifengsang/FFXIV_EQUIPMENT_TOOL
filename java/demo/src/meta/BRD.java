@@ -2,13 +2,13 @@ package meta;
 
 /**
  * 诗人
- * @author Cookies
+ * @author leifengsang
  */
 public class BRD extends Job {
 
 	@Override
 	public int getDamageType() {
-		return Job.DAMAGE_TYPE_PHYCICAL;
+		return Job.DAMAGE_TYPE_PHYSICAL;
 	}
 
 	@Override

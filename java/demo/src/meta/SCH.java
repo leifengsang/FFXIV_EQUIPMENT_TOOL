@@ -2,7 +2,7 @@ package meta;
 
 /**
  * 学者
- * @author Cookies
+ * @author leifengsang
  */
 public class SCH extends Job {
 

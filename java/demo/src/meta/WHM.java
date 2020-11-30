@@ -2,7 +2,7 @@ package meta;
 
 /**
  * 白魔法师
- * @author Cookies
+ * @author leifengsang
  */
 public class WHM extends Job {
 

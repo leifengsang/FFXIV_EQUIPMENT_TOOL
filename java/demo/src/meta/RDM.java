@@ -2,7 +2,7 @@ package meta;
 
 /**
  * 赤魔法师
- * @author Cookies
+ * @author leifengsang
  */
 public class RDM extends Job {
 

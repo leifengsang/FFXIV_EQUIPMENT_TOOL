@@ -2,7 +2,7 @@ package meta;
 
 /**
  * 召唤师
- * @author Cookies
+ * @author leifengsang
  */
 public class SMN extends Job {
 

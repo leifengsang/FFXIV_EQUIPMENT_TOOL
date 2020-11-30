@@ -4,11 +4,11 @@ import java.util.HashMap;
 
 /**
  * 特职
- * @author Cookies
+ * @author leifengsang
  */
 public abstract class Job {
 
-	public static final int DAMAGE_TYPE_PHYCICAL = 1; //物理
+	public static final int DAMAGE_TYPE_PHYSICAL = 1; //物理
 	public static final int DAMAGE_TYPE_MAGIC = 2; //魔法
 
 	public static final int EXTRA_ATTR_TYPE_NULL = 10; //无
@@ -52,7 +52,7 @@ public abstract class Job {
 	 */
 	public int getSpeed() {
 		switch (this.getDamageType()) {
-		case DAMAGE_TYPE_PHYCICAL:
+		case DAMAGE_TYPE_PHYSICAL:
 			return this.attr.getSkillSpeed();
 		case DAMAGE_TYPE_MAGIC:
 			return this.attr.getSkillSpeed();

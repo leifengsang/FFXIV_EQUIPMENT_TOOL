@@ -2,13 +2,13 @@ package meta;
 
 /**
  * 舞者
- * @author Cookies
+ * @author leifengsang
  */
 public class DNC extends Job {
 
 	@Override
 	public int getDamageType() {
-		return Job.DAMAGE_TYPE_PHYCICAL;
+		return Job.DAMAGE_TYPE_PHYSICAL;
 	}
 
 	@Override
