@@ -90,4 +90,8 @@ public class SQLHelper {
 	public static String getStringValue(ResultSet resultSet, String column) throws SQLException {
 		return resultSet.getString(column);
 	}
+	
+	public static boolean getBooleanValue(ResultSet resultSet, String column) throws SQLException {
+		return resultSet.getString(column)=="1";
+	}
 }
