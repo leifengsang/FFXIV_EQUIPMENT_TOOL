@@ -3,7 +3,8 @@ from bs4 import BeautifulSoup
 from model import model
 import time
 
-base_url = 'https://jp.finalfantasyxiv.com/'
+base_url_jp = 'https://jp.finalfantasyxiv.com/'
+base_url_na = 'https://na.finalfantasyxiv.com/'
 tab_url_list = []
 position_dict = {}
 job_dict = {}
@@ -26,9 +27,14 @@ def get_text(url):
     return None
 
 
-def get_equipment_by_category(type):
+def get_equipment_by_category(type, lang, ignore):
     index = 1
     while True:
+        base_url = None
+        if lang == 'jp':
+            base_url = base_url_jp
+        elif lang == 'na':
+            base_url = base_url_na
         url = base_url + 'lodestone/playguide/db/item/?category2={}&page={}'.format(type, index)
         print('[{}]currentUrl:'.format(time.strftime("%H:%M:%S", time.localtime())) + url)
         index += 1
@@ -43,13 +49,13 @@ def get_equipment_by_category(type):
             # 不是装备tr
             if a is None:
                 continue
-            current_url = base_url + a['href']
+            current_url = base_url_jp + a['href']
             name = a.string
             id = current_url.split('/')[-2]
             td = tr.find('td', attrs={'class': 'db-table__body--dark db-table__body--center'})
             level = int(td.string)
 
-            if model.get_url_by_id(id) is not None:
+            if ignore and model.get_url_by_id(id) is not None:
                 continue
 
             tab_url = {}
@@ -61,9 +67,9 @@ def get_equipment_by_category(type):
 
 
 def update_equipment_url():
-    get_equipment_by_category(1)  # 武器
-    get_equipment_by_category(3)  # 防具
-    get_equipment_by_category(4)  # 饰品
+    get_equipment_by_category(1, 'jp', True)  # 武器
+    get_equipment_by_category(3, 'jp', True)  # 防具
+    get_equipment_by_category(4, 'jp', True)  # 饰品
 
     model.update_url(tab_url_list)
 
@@ -198,9 +204,7 @@ def constant_init():
     job_dict['全クラス'] = 'ALL'
 
 
-def main():
-    constant_init()
-    # update_equipment_url()
+def update_equipment_undone():
     undone_list = model.get_url_undone()
     for tab_url in undone_list:
         update_equipment(tab_url)
@@ -208,6 +212,25 @@ def main():
         print('unSuccessUrlList(size:{}):'.format(len(un_success_url_list)))
         for url in un_success_url_list:
             print(url)
+
+
+def update_translator_na():
+    get_equipment_by_category(1, 'na', False)  # 武器
+    get_equipment_by_category(3, 'na', False)  # 防具
+    get_equipment_by_category(4, 'na', False)  # 饰品
+
+    model.update_translator_na(tab_url_list)
+
+
+def update_translator():
+    update_translator_na()
+
+
+def main():
+    constant_init()
+    # update_equipment_url()
+    # update_equipment_undone()
+    # update_translator()
 
 
 if __name__ == '__main__':

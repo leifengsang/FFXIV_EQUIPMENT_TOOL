@@ -125,6 +125,15 @@ class EquipmentModel(object):
         self.__db.execute(sql_update_url, [self.__version, equipment['id']])
         print('[{}]update {} success!'.format(time.strftime("%H:%M:%S", time.localtime()), equipment['name']))
 
+    def update_translator_na(self, list):
+        for obj in list:
+            self.__update_translator_single_na(obj)
+        print('[{}]update translator_na success!'.format(time.strftime("%H:%M:%S", time.localtime())))
+
+    def __update_translator_single_na(self, obj):
+        sql = 'update translator set english=? where id=?'
+        self.__db.execute(sql, [obj['name'], obj['id']])
+
     def get_url_undone(self):
         list = []
         sql = 'select * from url where version!=?'
