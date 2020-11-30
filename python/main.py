@@ -7,6 +7,7 @@ base_url = 'https://jp.finalfantasyxiv.com/'
 tab_url_list = []
 position_dict = {}
 job_dict = {}
+un_success_url_list = []
 
 
 def get_text(url):
@@ -73,6 +74,7 @@ def update_equipment(tab_url):
     text = get_text(url)
     if text is None:
         print('[{}]can not get equipment where url={}'.format(time.strftime("%H:%M:%S", time.localtime()), url))
+        un_success_url_list.append(url)
         return
     soup = BeautifulSoup(text, 'lxml')
     equipment = {}
@@ -202,6 +204,10 @@ def main():
     undone_list = model.get_url_undone()
     for tab_url in undone_list:
         update_equipment(tab_url)
+    if len(un_success_url_list) != 0:
+        print('unSuccessUrlList(size:{}):'.format(len(un_success_url_list)))
+        for url in un_success_url_list:
+            print(url)
 
 
 if __name__ == '__main__':
