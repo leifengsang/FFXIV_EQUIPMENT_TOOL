@@ -96,6 +96,8 @@ public class MainWindow {
 	private int screenWidth;
 	private int screenHeight;
 
+	private JScrollPane mainPanel;
+
 	/**
 	 * Launch the application.
 	 */
@@ -489,7 +491,7 @@ public class MainWindow {
 		doFilter((String) jobComboBox.getSelectedItem(), Integer.parseInt(floorInput.getText()),
 				Integer.parseInt(ceilInput.getText()));
 
-		JScrollPane mainPanel = new JScrollPane(equipmentPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+		mainPanel = new JScrollPane(equipmentPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		mainPanel.setBounds(0, headPanel.getHeight(), simulatorPanel.getWidth(),
 				simulatorPanel.getHeight() - headPanel.getHeight());
@@ -539,7 +541,7 @@ public class MainWindow {
 
 	private void layoutAttrPanel() {
 		//设置技速/唱速
-		if (currentJob.getDamageType() == Job.DAMAGE_TYPE_PHYCICAL) {
+		if (currentJob.getDamageType() == Job.DAMAGE_TYPE_PHYSICAL) {
 			speedLabel.setText("技能速度");
 			headSpeedLabel.setText("技能速度");
 		} else {
@@ -626,7 +628,7 @@ public class MainWindow {
 		layoutSinglePart("戒指2", 12);
 
 		equipmentPanel.setPreferredSize(new Dimension(equipmentPanel.getWidth(), offsetY));
-		equipmentPanel.repaint();
+		equipmentPanel.revalidate();
 	}
 
 	private void layoutSinglePart(String title, int position) {
@@ -639,8 +641,8 @@ public class MainWindow {
 		ButtonGroup group = new ButtonGroup();
 		List<Equipment> list = equipmentMap.get(position);
 		for (Equipment equipment : list) {
-			EquipmentPanel ePanel = new EquipmentPanel(equipment,
-					currentJob.getExtraAttrType() != Job.EXTRA_ATTR_TYPE_NULL);
+			EquipmentPanel ePanel = new EquipmentPanel(equipment, currentJob.getDamageType(),
+					currentJob.getExtraAttrType());
 			ePanel.setLocation(0, offsetY);
 			equipmentPanel.add(ePanel);
 			offsetY += ePanel.getHeight();

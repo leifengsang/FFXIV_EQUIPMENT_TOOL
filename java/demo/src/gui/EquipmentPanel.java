@@ -10,11 +10,15 @@ import javax.swing.JRadioButton;
 import javax.swing.SwingConstants;
 
 import meta.Equipment;
+import meta.Job;
 
 @SuppressWarnings("serial")
 public class EquipmentPanel extends JPanel {
 
 	private Equipment equipment;
+
+	private int damageType;
+	private int extraType;
 
 	private JRadioButton nameBtn;
 	private JButton materiaBtn;
@@ -67,13 +71,15 @@ public class EquipmentPanel extends JPanel {
 		extraLabel.setText(String.valueOf(extra));
 	}
 
-	public EquipmentPanel(Equipment equipment, boolean hasExtra) {
+	public EquipmentPanel(Equipment equipment, int damageType, int extraType) {
 		super();
 		this.equipment = equipment;
-		init(hasExtra);
+		this.damageType = damageType;
+		this.extraType = extraType;
+		init();
 	}
 
-	private void init(boolean hasExtra) {
+	private void init() {
 		this.setSize(970, 30);
 		this.setLayout(null);
 
@@ -117,7 +123,7 @@ public class EquipmentPanel extends JPanel {
 		this.add(speedLabel);
 		offsetX += singleWidth;
 
-		if (hasExtra) {
+		if (extraType != Job.EXTRA_ATTR_TYPE_NULL) {
 			extraLabel = new BorderLabel();
 			extraLabel.setBounds(offsetX, 0, singleWidth, this.getHeight());
 			extraLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -132,7 +138,15 @@ public class EquipmentPanel extends JPanel {
 		setCriticalHit(equipment.getAttr().getCriticalHit());
 		setDirectHit(equipment.getAttr().getDirectHit());
 		setDetermination(equipment.getAttr().getDetermination());
-		setSpeed(equipment.getSpeed());
-		setExtra(equipment.getExtra());
+		if (damageType == Job.DAMAGE_TYPE_PHYSICAL) {
+			setExtra(equipment.getAttr().getSkillSpeed());
+		} else {
+			setExtra(equipment.getAttr().getSpellSpeed());
+		}
+		if (extraType == Job.EXTRA_ATTR_TYPE_FAITH) {
+			setExtra(equipment.getAttr().getFaith());
+		} else if (extraType == Job.EXTRA_ATTR_TYPE_FORTITUDE) {
+			setExtra(equipment.getAttr().getFortitude());
+		}
 	}
 }

@@ -13,8 +13,13 @@ public class MateriaView extends JDialog {
 
 	private static final int WIDTH = 500;
 	private static final int HEIGHT = 300;
+	private static final int SPACE_Y = 10;
+	private static final int TOP = 20;
+	private static final int LEFT = 70;
 
 	private Equipment equipment;
+
+	private MateriaPanel materiaPanels[] = new MateriaPanel[5];
 
 	public Equipment getEquipment() {
 		return equipment;
@@ -36,6 +41,20 @@ public class MateriaView extends JDialog {
 		int screenHeight = (int) screensize.getHeight();
 		this.setBounds((screenWidth - WIDTH) / 2, (screenHeight - HEIGHT) / 2, WIDTH, HEIGHT);
 		this.setTitle("魔晶石");
+		this.setLayout(null);
+
+		int offsetY = TOP;
+		for (int i = 0; i < 5; i++) {
+			//禁断孔
+			if (i >= equipment.getNormalSocket() && !equipment.hasMoreSocket()) {
+				break;
+			}
+			materiaPanels[i] = new MateriaPanel(i, equipment);
+			materiaPanels[i].setLocation(LEFT, offsetY);
+			this.add(materiaPanels[i]);
+			offsetY += materiaPanels[i].getHeight() + SPACE_Y;
+		}
+
 		this.setVisible(true);
 	}
 }
