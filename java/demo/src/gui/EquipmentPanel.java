@@ -78,7 +78,7 @@ public class EquipmentPanel extends JPanel {
 		this.setLayout(null);
 
 		int offsetX = 0;
-		nameBtn = new JRadioButton(String.format("[%d]", equipment.getLevel()) + equipment.getName());
+		nameBtn = new JRadioButton(String.format("[%s]", equipment.getLevel()) + equipment.getName());
 		nameBtn.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		nameBtn.setBounds(offsetX, 0, MainWindow.HEAD_NAME_WIDTH, this.getHeight());
 		this.add(nameBtn);
