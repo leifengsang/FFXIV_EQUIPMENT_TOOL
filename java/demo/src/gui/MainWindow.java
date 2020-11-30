@@ -36,7 +36,7 @@ import javax.swing.UIManager;
 import meta.Attr;
 import meta.Equipment;
 import meta.Job;
-import model.EquipmemtModel;
+import model.EquipmentModel;
 
 public class MainWindow {
 
@@ -45,7 +45,6 @@ public class MainWindow {
 	public static final int HEAD_MATERIA_WIDTH = 100;
 
 	private Map<Integer, List<Equipment>> equipmentMap = new HashMap<Integer, List<Equipment>>();
-	private Map<String, Equipment> nameMap = new HashMap<>();
 	private Job currentJob;
 	private int offsetY = 0;
 	private static final int SINGLE_PART_HEIGHT = 20;
@@ -317,7 +316,7 @@ public class MainWindow {
 		filterPanel.setLayout(null);
 
 		JComboBox<String> jobComboBox = new JComboBox<>();
-		for (String job : EquipmemtModel.Job_LIST) {
+		for (String job : EquipmentModel.Job_LIST) {
 			jobComboBox.addItem(job);
 		}
 		jobComboBox.setBounds(59, 13, 107, 24);
@@ -390,6 +389,37 @@ public class MainWindow {
 		filterBtn.setBounds(379, 12, 113, 27);
 		filterPanel.add(filterBtn);
 
+		JComboBox<String> languageComboBox = new JComboBox<>();
+		languageComboBox.setBounds(filterPanel.getWidth() - 100 - 14, 13, 100, 24);
+		filterPanel.add(languageComboBox);
+		languageComboBox.addItem("日本語");
+		languageComboBox.addItem("english");
+		languageComboBox.addItemListener(new ItemListener() {
+
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				int language = 0;
+				switch ((String) languageComboBox.getSelectedItem()) {
+				case "日本語":
+					language = EquipmentModel.LANG_JP;
+					break;
+				case "english":
+					language = EquipmentModel.LANG_EN;
+					break;
+				default:
+					return;
+				}
+				if (EquipmentModel.getInstance().getLanguage() != language) {
+					EquipmentModel.getInstance().setLanguage(language);
+					layoutEquipmentPanel();
+				}
+			}
+		});
+
+		JLabel languageLabel = new JLabel("语言：");
+		languageLabel.setBounds(808, 16, 45, 18);
+		filterPanel.add(languageLabel);
+
 		JPanel simulatorPanel = new JPanel();
 		simulatorPanel.setBounds(10, 60, frame.getWidth() - 300 - 10, frame.getHeight() - 60 - TITLE_HEIGHT);
 		frame.getContentPane().add(simulatorPanel);
@@ -401,7 +431,12 @@ public class MainWindow {
 		headPanel.setLayout(null);
 
 		int offsetX = 0;
-		JLabel headNameLabel = new BorderLabel("名称");//最长的名字：レプリカ・スカイラット・ストライカーフィンガレスグローブ
+		/**
+		 * 最长的名字
+		 * レプリカ・スカイラット・ストライカーフィンガレスグローブ
+		 * Augmented Neo-Ishgardian Leather Belt of Striking
+		 */
+		JLabel headNameLabel = new BorderLabel("名称");
 		headNameLabel.setHorizontalAlignment(SwingConstants.CENTER);//具体的装备界面需要更改为left
 		headNameLabel.setBounds(0, 0, HEAD_NAME_WIDTH, 30);
 		headPanel.add(headNameLabel);
@@ -493,26 +528,9 @@ public class MainWindow {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		List<Equipment> equipmentList = EquipmemtModel.getInstance().getEquipmentList();
+		List<Equipment> equipmentList = EquipmentModel.getInstance().getEquipmentByLevelAndJob(clazz, floor, ceil);
 		for (Equipment equipment : equipmentList) {
-			if (equipment.getPosition() == -1) {
-				continue;
-			}
-
-			if (!equipment.isBattle()) {
-				continue;
-			}
-
-			if (!equipment.getEnableJobList().contains(clazz)) {
-				continue;
-			}
-			int level = equipment.getLevel();
-			if (!(level >= floor && level <= ceil)) {
-				continue;
-			}
-			equipment.getMateriaList().clear();
 			equipmentMap.get(equipment.getPosition()).add(equipment);
-			nameMap.put(equipment.getName(), equipment);
 		}
 		layoutAttrPanel();
 		calAttr();
@@ -574,7 +592,6 @@ public class MainWindow {
 				list.clear();
 			}
 		}
-		nameMap.clear();
 	}
 
 	private void layoutEquipmentPanel() {
@@ -636,7 +653,7 @@ public class MainWindow {
 					if (radioBtn.isSelected()) {
 						String name = ((JRadioButton) e.getSource()).getText();
 						name = name.substring(name.indexOf(']') + 1);
-						Equipment currentEquipment = nameMap.get(name);
+						Equipment currentEquipment = EquipmentModel.getInstance().getEquipmentByName(name);
 						currentJob.equip(currentEquipment);
 						calAttr();
 					}

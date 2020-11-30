@@ -3,6 +3,8 @@ package meta;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.EquipmentModel;
+
 public class Equipment {
 	public static final int POS_ARMS = 1; //武器
 
@@ -50,11 +52,6 @@ public class Equipment {
 	 * 装备ID
 	 */
 	private String id;
-
-	/**
-	 * 装备名称
-	 */
-	private String name;
 
 	/**
 	 * 装备属性
@@ -108,11 +105,7 @@ public class Equipment {
 	}
 
 	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
+		return EquipmentModel.getInstance().getEquipmentNameById(id);
 	}
 
 	public Attr getAttr() {
