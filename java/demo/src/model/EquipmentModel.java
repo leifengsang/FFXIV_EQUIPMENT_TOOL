@@ -166,7 +166,7 @@ public class EquipmentModel {
 			if (!(level >= floor && level <= ceil)) {
 				continue;
 			}
-			equipment.getMateriaList().clear();
+			equipment.getMateriaMap().clear();
 			list.add(equipment);
 		}
 		return list;

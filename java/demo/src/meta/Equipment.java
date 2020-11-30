@@ -1,7 +1,8 @@
 package meta;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import model.EquipmentModel;
 
@@ -94,7 +95,7 @@ public class Equipment {
 	/**
 	 * 魔晶石
 	 */
-	private ArrayList<Materia<String, Integer>> materiaList = new ArrayList<>();
+	private Map<Integer, Materia<String, Integer>> materiaMap = new HashMap<>();
 
 	public String getId() {
 		return id;
@@ -112,7 +113,11 @@ public class Equipment {
 		try {
 			Attr attr = (Attr) this.attr.clone();
 			int limit = this.attr.getMateriaValueLimit();
-			for (Materia<String, Integer> materia : materiaList) {
+			for (int i = 0; i < 5; i++) {
+				Materia<String, Integer> materia = materiaMap.get(i);
+				if (materia == null) {
+					continue;
+				}
 				attr.add(new Attr(materia));
 			}
 			attr.checkLimit(limit);
@@ -154,12 +159,12 @@ public class Equipment {
 
 	}
 
-	public ArrayList<Materia<String, Integer>> getMateriaList() {
-		return materiaList;
+	public Map<Integer, Materia<String, Integer>> getMateriaMap() {
+		return materiaMap;
 	}
 
-	public void setMateriaList(ArrayList<Materia<String, Integer>> materiaList) {
-		this.materiaList = materiaList;
+	public void setMateriaMap(Map<Integer, Materia<String, Integer>> materiaMap) {
+		this.materiaMap = materiaMap;
 	}
 
 	public int getType() {
@@ -178,28 +183,12 @@ public class Equipment {
 		this.normalSocket = normalSocket;
 	}
 
-	public boolean isMoreSocket() {
+	public boolean hasMoreSocket() {
 		return moreSocket;
 	}
 
 	public void setMoreSocket(boolean moreSocket) {
 		this.moreSocket = moreSocket;
-	}
-
-	/**
-	 * 一键装备不可能同时拥有技速和唱速，所以直接取max
-	 * @return
-	 */
-	public int getSpeed() {
-		return Math.max(this.getAttr().getSkillSpeed(), this.getAttr().getSpellSpeed());
-	}
-
-	/**
-	 * 一键装备不可能同时拥有信仰和坚韧，所以直接取max
-	 * @return
-	 */
-	public int getExtra() {
-		return Math.max(this.getAttr().getFaith(), this.getAttr().getFortitude());
 	}
 
 	/**
