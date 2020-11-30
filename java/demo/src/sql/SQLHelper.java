@@ -92,6 +92,6 @@ public class SQLHelper {
 	}
 	
 	public static boolean getBooleanValue(ResultSet resultSet, String column) throws SQLException {
-		return resultSet.getString(column)=="1";
+		return resultSet.getString(column).equals("1");
 	}
 }
