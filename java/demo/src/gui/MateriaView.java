@@ -3,6 +3,8 @@ package gui;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Toolkit;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 import javax.swing.JDialog;
 
@@ -51,10 +53,21 @@ public class MateriaView extends JDialog {
 			}
 			materiaPanels[i] = new MateriaPanel(i, equipment);
 			materiaPanels[i].setLocation(LEFT, offsetY);
+			materiaPanels[i].getMateriaBox().addItemListener(new ItemListener() {
+
+				@Override
+				public void itemStateChanged(ItemEvent e) {
+					calAttr();
+				}
+			});
 			this.add(materiaPanels[i]);
 			offsetY += materiaPanels[i].getHeight() + SPACE_Y;
 		}
 
 		this.setVisible(true);
+	}
+
+	private void calAttr() {
+		//TODO
 	}
 }

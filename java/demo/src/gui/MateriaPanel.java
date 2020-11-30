@@ -1,5 +1,7 @@
 package gui;
 
+import java.awt.Color;
+
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -9,6 +11,9 @@ import meta.Materia;
 
 @SuppressWarnings("serial")
 public class MateriaPanel extends JPanel {
+
+	private static final Color COLOR_GREEN = new Color(0x0ab20a);
+	private static final Color COLOR_RED = new Color(0xdd2d12);
 
 	private JComboBox<String> materiaBox;
 
@@ -20,6 +25,22 @@ public class MateriaPanel extends JPanel {
 
 	private boolean isMoreSocket() {
 		return index > equipment.getNormalSocket();
+	}
+
+	public JComboBox<String> getMateriaBox() {
+		return materiaBox;
+	}
+
+	public void setMateriaBox(JComboBox<String> materiaBox) {
+		this.materiaBox = materiaBox;
+	}
+
+	public JLabel getLabel() {
+		return label;
+	}
+
+	public void setLabel(JLabel label) {
+		this.label = label;
 	}
 
 	public MateriaPanel(int index, Equipment equipment) {
@@ -52,7 +73,7 @@ public class MateriaPanel extends JPanel {
 		this.add(materiaBox);
 		int offsetX = 0;
 		materiaBox.setBounds(offsetX, 0, 300, 30);
-		Materia<String, Integer> materia = equipment.getMateriaMap().get(index);
+		Materia<String, Integer> materia = getMateria();
 		if (materia != null) {
 			materiaBox.setSelectedItem(materia.getName());
 		}
@@ -60,13 +81,15 @@ public class MateriaPanel extends JPanel {
 
 		label = new JLabel();
 		label.setBounds(offsetX, 0, 50, 30);
-		//绿色:0x0ab20a
-		//红色:0xdd2d12
 		this.add(label);
-		setLabel();
 	}
 
-	private void setLabel() {
-		
+	private Materia<String, Integer> getMateria() {
+		return equipment.getMateriaMap().get(index);
+	}
+
+	public void setLabel(int value) {
+		label.setText("+" + value);
+		label.setForeground(getMateria().getValue() == value ? COLOR_GREEN : COLOR_RED);
 	}
 }
