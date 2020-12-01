@@ -61,6 +61,11 @@ public class EquipmentModel {
 	private void load() {
 		loadEquipment();
 		loadTranslator();
+		loadThreshold();
+	}
+
+	private void loadThreshold() {
+		//TODO
 	}
 
 	@SuppressWarnings("unchecked")
