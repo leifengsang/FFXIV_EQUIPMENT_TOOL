@@ -65,7 +65,7 @@ public class MateriaPanel extends JPanel {
 		this.add(materiaBox);
 		int offsetX = 0;
 		materiaBox.setBounds(offsetX, 0, 300, 30);
-		Materia<String, Integer> materia = getMateria();
+		Materia materia = getMateria();
 		if (materia != null) {
 			materiaBox.setSelectedItem(materia.getName());
 		}
@@ -76,11 +76,11 @@ public class MateriaPanel extends JPanel {
 		this.add(label);
 	}
 
-	public Materia<String, Integer> getMateria() {
+	public Materia getMateria() {
 		return equipment.getMateriaMap().get(index);
 	}
 
-	public Materia<String, Integer> createMateria() {
+	public Materia createMateria() {
 		String name = (String) materiaBox.getSelectedItem();
 		if (name.equals("无")) {
 			return null;
@@ -88,7 +88,7 @@ public class MateriaPanel extends JPanel {
 		String pre = name.split("\\[")[0]; //暴击8
 		String key = Materia.NAME_MAP.get(pre.substring(0, pre.length() - 1));
 		int value = Integer.parseInt((String) pre.subSequence(pre.length() - 1, pre.length()));
-		return new Materia<String, Integer>(key, value);
+		return new Materia(key, value);
 	}
 
 	public void setLabel(int value) {

@@ -80,7 +80,7 @@ public class MateriaView extends JDialog {
 				return;
 			}
 			equipment.getMateriaMap().put(i, materiaPanels[i].createMateria());
-			Materia<String, Integer> materia = materiaPanels[i].getMateria();
+			Materia materia = materiaPanels[i].getMateria();
 			if (materia == null) {
 				materiaPanels[i].setLabel("");
 				continue;

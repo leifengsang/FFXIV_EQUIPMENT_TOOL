@@ -129,7 +129,7 @@ public class Attr implements Cloneable {
 	 * @param materia
 	 * @throws Error
 	 */
-	public Attr(Materia<String, Integer> materia) throws Error {
+	public Attr(Materia materia) throws Error {
 		switch (materia.getKey()) {
 		case Materia.CRITICAL_HIT:
 			this.criticalHit = Materia.ATTR_VALUE[materia.getValue()];
@@ -215,7 +215,7 @@ public class Attr implements Cloneable {
 		this.fortitude = Math.min(this.fortitude, limit);
 	}
 
-	public int getEffectiveAttr(Materia<String, Integer> materia, int limit) {
+	public int getEffectiveAttr(Materia materia, int limit) {
 		int pre = -1;
 		switch (materia.getKey()) {
 		case Materia.CRITICAL_HIT:

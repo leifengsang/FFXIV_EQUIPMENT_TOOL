@@ -95,7 +95,7 @@ public class Equipment {
 	/**
 	 * 魔晶石
 	 */
-	private Map<Integer, Materia<String, Integer>> materiaMap = new HashMap<>();
+	private Map<Integer, Materia> materiaMap = new HashMap<>();
 
 	public String getId() {
 		return id;
@@ -114,7 +114,7 @@ public class Equipment {
 			Attr attr = (Attr) this.attr.clone();
 			int limit = this.attr.getMateriaValueLimit();
 			for (int i = 0; i < 5; i++) {
-				Materia<String, Integer> materia = materiaMap.get(i);
+				Materia materia = materiaMap.get(i);
 				if (materia == null) {
 					continue;
 				}
@@ -169,11 +169,11 @@ public class Equipment {
 
 	}
 
-	public Map<Integer, Materia<String, Integer>> getMateriaMap() {
+	public Map<Integer, Materia> getMateriaMap() {
 		return materiaMap;
 	}
 
-	public void setMateriaMap(Map<Integer, Materia<String, Integer>> materiaMap) {
+	public void setMateriaMap(Map<Integer, Materia> materiaMap) {
 		this.materiaMap = materiaMap;
 	}
 

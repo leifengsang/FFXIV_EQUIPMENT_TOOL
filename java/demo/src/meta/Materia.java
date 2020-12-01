@@ -2,14 +2,11 @@ package meta;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * @author leifengsang
- * @param <K> type of materia
- * @param <V> level of materia
  */
-public class Materia<K, V> implements Entry<K, V> {
+public class Materia {
 	public static final String CRITICAL_HIT = "criticalHit";
 
 	public static final String DIRECT_HIT = "directHit";
@@ -64,30 +61,29 @@ public class Materia<K, V> implements Entry<K, V> {
 		NAME_MAP.put("咏唱速度", "spellSpeed");
 	}
 
-	private final K key;
+	private String key;
 
-	private V value;
+	private int value;
 
-	public Materia(K key, V value) {
+	public Materia(String key, int value) {
 		this.key = key;
 		this.value = value;
 	}
 
-	@Override
-	public K getKey() {
+	public String getKey() {
 		return key;
 	}
 
-	@Override
-	public V getValue() {
+	public void setKey(String key) {
+		this.key = key;
+	}
+
+	public int getValue() {
 		return value;
 	}
 
-	@Override
-	public V setValue(V value) {
-		V old = this.value;
+	public void setValue(int value) {
 		this.value = value;
-		return old;
 	}
 
 	public String getName() {
