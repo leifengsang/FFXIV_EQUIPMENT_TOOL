@@ -8,7 +8,9 @@ import java.awt.event.ItemListener;
 
 import javax.swing.JDialog;
 
+import meta.Attr;
 import meta.Equipment;
+import meta.Materia;
 
 @SuppressWarnings("serial")
 public class MateriaView extends JDialog {
@@ -44,6 +46,7 @@ public class MateriaView extends JDialog {
 		this.setBounds((screenWidth - WIDTH) / 2, (screenHeight - HEIGHT) / 2, WIDTH, HEIGHT);
 		this.setTitle("魔晶石");
 		this.setLayout(null);
+		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
 		int offsetY = TOP;
 		for (int i = 0; i < 5; i++) {
@@ -63,11 +66,27 @@ public class MateriaView extends JDialog {
 			this.add(materiaPanels[i]);
 			offsetY += materiaPanels[i].getHeight() + SPACE_Y;
 		}
+		calAttr();
 
 		this.setVisible(true);
 	}
 
 	private void calAttr() {
-		//TODO
+		Attr attr = equipment.getAttrNoMateria();
+		int limit = attr.getMateriaValueLimit();
+		for (int i = 0; i < 5; i++) {
+			//禁断孔
+			if (i >= equipment.getNormalSocket() && !equipment.hasMoreSocket()) {
+				return;
+			}
+			equipment.getMateriaMap().put(i, materiaPanels[i].createMateria());
+			Materia<String, Integer> materia = materiaPanels[i].getMateria();
+			if (materia == null) {
+				materiaPanels[i].setLabel("");
+				continue;
+			}
+			equipment.getMateriaMap().put(i, materia);
+			materiaPanels[i].setLabel(attr.getEffectiveAttr(materia, limit));
+		}
 	}
 }

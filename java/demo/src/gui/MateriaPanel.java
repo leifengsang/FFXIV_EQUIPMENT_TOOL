@@ -35,14 +35,6 @@ public class MateriaPanel extends JPanel {
 		this.materiaBox = materiaBox;
 	}
 
-	public JLabel getLabel() {
-		return label;
-	}
-
-	public void setLabel(JLabel label) {
-		this.label = label;
-	}
-
 	public MateriaPanel(int index, Equipment equipment) {
 		super();
 		this.index = index;
@@ -77,19 +69,34 @@ public class MateriaPanel extends JPanel {
 		if (materia != null) {
 			materiaBox.setSelectedItem(materia.getName());
 		}
-		offsetX += materiaBox.getWidth();
+		offsetX += materiaBox.getWidth() + 10;
 
 		label = new JLabel();
 		label.setBounds(offsetX, 0, 50, 30);
 		this.add(label);
 	}
 
-	private Materia<String, Integer> getMateria() {
+	public Materia<String, Integer> getMateria() {
 		return equipment.getMateriaMap().get(index);
+	}
+
+	public Materia<String, Integer> createMateria() {
+		String name = (String) materiaBox.getSelectedItem();
+		if (name.equals("无")) {
+			return null;
+		}
+		String pre = name.split("\\[")[0]; //暴击8
+		String key = Materia.NAME_MAP.get(pre.substring(0, pre.length() - 1));
+		int value = Integer.parseInt((String) pre.subSequence(pre.length() - 1, pre.length()));
+		return new Materia<String, Integer>(key, value);
 	}
 
 	public void setLabel(int value) {
 		label.setText("+" + value);
-		label.setForeground(getMateria().getValue() == value ? COLOR_GREEN : COLOR_RED);
+		label.setForeground(Materia.ATTR_VALUE[getMateria().getValue()] == value ? COLOR_GREEN : COLOR_RED);
+	}
+
+	public void setLabel(String text) {
+		label.setText(text);
 	}
 }

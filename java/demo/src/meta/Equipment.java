@@ -123,6 +123,16 @@ public class Equipment {
 			attr.checkLimit(limit);
 			return attr;
 		} catch (Exception e) {
+			System.out.println("getAttr(): " + e.getMessage());
+			return null;
+		}
+	}
+
+	public Attr getAttrNoMateria() {
+		try {
+			return (Attr) attr.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
 			return null;
 		}
 	}

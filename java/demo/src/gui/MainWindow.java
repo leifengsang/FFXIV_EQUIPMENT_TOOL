@@ -14,6 +14,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -628,6 +630,7 @@ public class MainWindow {
 		layoutSinglePart("戒指2", 12);
 
 		equipmentPanel.setPreferredSize(new Dimension(equipmentPanel.getWidth(), offsetY));
+		equipmentPanel.repaint();
 		equipmentPanel.revalidate();
 	}
 
@@ -667,7 +670,17 @@ public class MainWindow {
 
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					new MateriaView(MainWindow.this.frame, equipment);
+					MateriaView materiaView = new MateriaView(MainWindow.this.frame, equipment);
+					materiaView.addWindowListener(new WindowAdapter() {
+
+						@Override
+						public void windowClosed(WindowEvent e) {
+							super.windowClosed(e);
+							ePanel.refreshAttr();
+							calAttr();
+						}
+						
+					});
 				}
 
 			});

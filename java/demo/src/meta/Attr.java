@@ -215,6 +215,55 @@ public class Attr implements Cloneable {
 		this.fortitude = Math.min(this.fortitude, limit);
 	}
 
+	public int getEffectiveAttr(Materia<String, Integer> materia, int limit) {
+		int pre = -1;
+		switch (materia.getKey()) {
+		case Materia.CRITICAL_HIT:
+			pre = this.criticalHit;
+			break;
+		case Materia.DIRECT_HIT:
+			pre = this.directHit;
+			break;
+		case Materia.DETERMINATION:
+			pre = this.determination;
+			break;
+		case Materia.FAITH:
+			pre = this.faith;
+			break;
+		case Materia.SKILL_SPEED:
+			pre = this.skillSpeed;
+			break;
+		case Materia.SPELL_SPEED:
+			pre = this.spellSpeed;
+			break;
+		case Materia.FORTITUDE:
+			pre = this.fortitude;
+			break;
+		default:
+			return 0;
+		}
+		this.add(new Attr(materia));
+		checkLimit(limit);
+		switch (materia.getKey()) {
+		case Materia.CRITICAL_HIT:
+			return this.criticalHit - pre;
+		case Materia.DIRECT_HIT:
+			return this.directHit - pre;
+		case Materia.DETERMINATION:
+			return this.determination - pre;
+		case Materia.FAITH:
+			return this.faith - pre;
+		case Materia.SKILL_SPEED:
+			return this.skillSpeed - pre;
+		case Materia.SPELL_SPEED:
+			return this.spellSpeed - pre;
+		case Materia.FORTITUDE:
+			return this.fortitude - pre;
+		default:
+			return 0;
+		}
+	}
+
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		return super.clone();
