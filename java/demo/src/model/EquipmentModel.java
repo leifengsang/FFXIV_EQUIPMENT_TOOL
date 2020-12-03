@@ -1,10 +1,19 @@
 package model;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import meta.Attr;
 import meta.Equipment;
@@ -31,6 +40,18 @@ public class EquipmentModel {
 	private Map<String, Equipment> idMap = new HashMap<>();
 
 	private int language = LANG_JP;
+
+	private static final String THRESHOLD_PATH = "../../threshold.xlsx";
+
+	private List<Integer> criticalHitThreshold = new ArrayList<>();
+
+	private List<Integer> directHitThreshold = new ArrayList<>();
+
+	private List<Integer> determinationThreshold = new ArrayList<>();
+
+	private List<Integer> fortitudeThreshold = new ArrayList<>();
+
+	private List<Integer> speedThreshold = new ArrayList<>();
 
 	private static EquipmentModel instance;
 
@@ -64,8 +85,23 @@ public class EquipmentModel {
 		loadThreshold();
 	}
 
+	@SuppressWarnings("resource")
 	private void loadThreshold() {
-		//TODO
+		try {
+			InputStream is = new FileInputStream(new File(THRESHOLD_PATH));
+			Workbook excel = new XSSFWorkbook(is);
+			for (int sheetNum = 0; sheetNum < 5; sheetNum++) {
+				Sheet sheet = excel.getSheetAt(sheetNum);
+				List<Integer> list = getThresholdListByType(sheet.getSheetName());
+				for (int rowNum = 1; rowNum <= sheet.getLastRowNum(); rowNum++) {
+					Row row = sheet.getRow(rowNum);
+					Cell cell = row.getCell(0);
+					list.add((int) cell.getNumericCellValue());
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -175,6 +211,46 @@ public class EquipmentModel {
 			list.add(equipment);
 		}
 		return list;
+	}
+
+	public int getCurrentThreshold(int target, String type) {
+		List<Integer> list = getThresholdListByType(type);
+		int ret = -1;
+		for (int value : list) {
+			if (target >= value) {
+				ret = value;
+			} else {
+				break;
+			}
+		}
+		return ret;
+	}
+
+	public int getNextThreshold(int target, String type) {
+		List<Integer> list = getThresholdListByType(type);
+		for (int value : list) {
+			if (target < value) {
+				return value;
+			}
+		}
+		return -1;
+	}
+
+	private List<Integer> getThresholdListByType(String type) {
+		switch (type) {
+		case "criticalHit":
+			return criticalHitThreshold;
+		case "directHit":
+			return directHitThreshold;
+		case "determination":
+			return determinationThreshold;
+		case "fortitude":
+			return fortitudeThreshold;
+		case "speed":
+			return speedThreshold;
+		default:
+			throw new Error("attr type error");
+		}
 	}
 
 }

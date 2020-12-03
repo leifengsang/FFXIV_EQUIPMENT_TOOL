@@ -264,6 +264,68 @@ public class Attr implements Cloneable {
 		}
 	}
 
+	/**
+	 * 根据阈值计算暴击率
+	 * @param threshold
+	 * @return
+	 */
+	public static String getCriticalHitRateByThreshold(int threshold) {
+		double rate = (threshold - 380) * 0.2 / 3300 + 0.05;
+		return String.format("%.2f", rate * 100) + "%";
+
+	}
+
+	/**
+	 * 根据阈值计算直击率
+	 * @param threshold
+	 * @return
+	 */
+	public static String getDirectHitRateByThreshold(int threshold) {
+		double rate = (threshold - 380) * 0.55 / 3300;
+		return String.format("%.2f", rate * 100) + "%";
+	}
+
+	/**
+	 * 根据阈值计算增伤比
+	 * @param threshold
+	 * @return
+	 */
+	public static String getDeterminationRateByThreshold(int threshold) {
+		double rate = (threshold - 340) * 0.13 / 3300;
+		return String.format("%.2f", rate * 100) + "%";
+	}
+
+	/**
+	 * 根据阈值计算增减伤比
+	 * @param threshold
+	 * @return
+	 */
+	public static String getFortitudeRateByThreshold(int threshold) {
+		double rate = (threshold - 380) * 0.1 / 3300;
+		return String.format("%.2f", rate * 100) + "%";
+	}
+
+	/**
+	 * 根据阈值计算gcd
+	 * @param threshold
+	 * @return
+	 */
+	public static String getGcdByThreshold(int threshold) {
+		//ROUNDDOWN(ROUNDDOWN(ROUNDDOWN((100*(1-0))*ROUNDDOWN((1000-ROUNDDOWN((130*(x-380)/3300),0))*2500/1000,0)/100,0)*100/1000,0)*100/100,0)/100
+		double rate = ((int) (((1000 - ((int) (130 * (threshold - 380) * 1.0 / 3300))) * 2500 / 1000) * 0.1)) * 1.0
+				/ 100;
+		return String.format("%.2f", rate);
+	}
+
+	/**
+	 * 根据阈值计算每三秒回蓝
+	 * @param threshold
+	 * @return
+	 */
+	public static String getRecoverByThreshold(int threshold) {
+		return String.valueOf(200 + (threshold - 340) / 22);
+	}
+
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		return super.clone();
