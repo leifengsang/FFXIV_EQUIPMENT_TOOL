@@ -60,8 +60,8 @@ public class MainWindow {
 	private JLabel criticalHitNumLabel;
 	private JLabel criticalHitThresholdNumLabel;
 	private JLabel criticalHitRateNumLabel;
+	private JLabel nextCriticalHitThresholdNumLabel;
 	private JLabel nextCriticalHitRateNumLabel;
-	private JLabel nextCriticalHitRateLabel;
 
 	private JLabel directHitNumLabel;
 	private JLabel directHitThresholdNumLabel;
@@ -169,14 +169,14 @@ public class MainWindow {
 		JLabel nextCriticalHitThresholdLabel = new JLabel("下一档阈值");
 		criticalHitPanel.add(nextCriticalHitThresholdLabel);
 
-		nextCriticalHitRateNumLabel = new JLabel("0");
-		criticalHitPanel.add(nextCriticalHitRateNumLabel);
-
-		JLabel nextCriticalHitThresholdNumLabel = new JLabel("下一档阈值（值）");
+		nextCriticalHitThresholdNumLabel = new JLabel("0");
 		criticalHitPanel.add(nextCriticalHitThresholdNumLabel);
 
-		nextCriticalHitRateLabel = new JLabel("0");
-		criticalHitPanel.add(nextCriticalHitRateLabel);
+		JLabel nextCriticalHitThresholdNumLabel = new JLabel("暴击率");
+		criticalHitPanel.add(nextCriticalHitThresholdNumLabel);
+
+		nextCriticalHitRateNumLabel = new JLabel("0");
+		criticalHitPanel.add(nextCriticalHitRateNumLabel);
 
 		JPanel directHitPanel = new BorderPanel();
 		attrPanel.add(directHitPanel);
@@ -578,11 +578,93 @@ public class MainWindow {
 	private void calAttr() {
 		Attr attr = currentJob.getAttr();
 		criticalHitNumLabel.setText(String.valueOf(attr.getCriticalHit()));
+		int criticalHitThreshold = EquipmentModel.getInstance().getCurrentThreshold(attr.getCriticalHit(),
+				"criticalHit");
+		criticalHitThresholdNumLabel.setText(String.valueOf(criticalHitThreshold));
+		criticalHitRateNumLabel.setText(Attr.getCriticalHitRateByThreshold(criticalHitThreshold));
+		int nextCriticalHitThreshold = EquipmentModel.getInstance().getNextThreshold(attr.getCriticalHit(),
+				"criticalHit");
+		if (nextCriticalHitThreshold == -1) {
+			nextCriticalHitThresholdNumLabel.setText("无下一档数据");
+			nextCriticalHitRateNumLabel.setText("无下一档数据");
+		} else {
+			nextCriticalHitThresholdNumLabel.setText(String.valueOf(nextCriticalHitThreshold));
+			nextCriticalHitRateNumLabel.setText(Attr.getCriticalHitRateByThreshold(nextCriticalHitThreshold));
+		}
+
 		directHitNumLabel.setText(String.valueOf(attr.getDirectHit()));
+		int directHitThreshold = EquipmentModel.getInstance().getCurrentThreshold(attr.getDirectHit(), "directHit");
+		directHitThresholdNumLabel.setText(String.valueOf(directHitThreshold));
+		directHitRateNumLabel.setText(Attr.getDirectHitRateByThreshold(directHitThreshold));
+		int nextDirectHitThreshold = EquipmentModel.getInstance().getNextThreshold(attr.getDirectHit(), "directHit");
+		if (nextDirectHitThreshold == -1) {
+			nextDirectHitThresholdNumLabel.setText("无下一档数据");
+			nextDirectHitRateNumLabel.setText("无下一档数据");
+		} else {
+			nextDirectHitThresholdNumLabel.setText(String.valueOf(nextDirectHitThreshold));
+			nextDirectHitRateNumLabel.setText(Attr.getDirectHitRateByThreshold(nextDirectHitThreshold));
+		}
+
 		determinationNumLabel.setText(String.valueOf(attr.getDetermination()));
+		int determinationThreshold = EquipmentModel.getInstance().getCurrentThreshold(attr.getDetermination(),
+				"determination");
+		determinationThresholdNumLabel.setText(String.valueOf(determinationThreshold));
+		determinationRateNumLabel.setText(Attr.getDeterminationRateByThreshold(determinationThreshold));
+		int nextDeterminationThreshold = EquipmentModel.getInstance().getNextThreshold(attr.getDetermination(),
+				"determination");
+		if (nextDeterminationThreshold == -1) {
+			nextDeterminationThresholdNumLabel.setText("无下一档数据");
+			nextDeterminationRateNumLabel.setText("无下一档数据");
+		} else {
+			nextDeterminationThresholdNumLabel.setText(String.valueOf(nextDeterminationThreshold));
+			nextDeterminationRateNumLabel.setText(Attr.getDeterminationRateByThreshold(nextDeterminationThreshold));
+		}
+
 		speedNumLabel.setText(String.valueOf(currentJob.getSpeed()));
+		int speedThreshold = EquipmentModel.getInstance().getCurrentThreshold(currentJob.getSpeed(), "speed");
+		speedThresholdNumLabel.setText(String.valueOf(speedThreshold));
+		gcdNumLabel.setText(Attr.getGcdByThreshold(speedThreshold));
+		int nextSpeedThreshold = EquipmentModel.getInstance().getNextThreshold(currentJob.getSpeed(), "speed");
+		if (nextSpeedThreshold == -1) {
+			nextSpeedThresholdNumLabel.setText("无下一档数据");
+			nextGcdNumLabel.setText("无下一档数据");
+		} else {
+			nextSpeedThresholdNumLabel.setText(String.valueOf(nextSpeedThreshold));
+			nextGcdNumLabel.setText(Attr.getGcdByThreshold(nextSpeedThreshold));
+		}
+
 		if (extraPanel.isVisible()) {
 			extraNumLabel.setText(String.valueOf(currentJob.getExtraAttr()));
+			int extraAttrType = currentJob.getExtraAttrType();
+			if (extraAttrType == Job.EXTRA_ATTR_TYPE_FAITH) {
+				int faithThreshold = EquipmentModel.getInstance().getCurrentThreshold(currentJob.getExtraAttr(),
+						"faith");
+				extraThresholdNumLabel.setText(String.valueOf(faithThreshold));
+				extraRateNumLabel.setText(Attr.getRecoverByThreshold(faithThreshold));
+				int nextfaithThreshold = EquipmentModel.getInstance().getNextThreshold(currentJob.getExtraAttr(),
+						"faith");
+				if (nextfaithThreshold == -1) {
+					nextExtraThresholdNumLabel.setText("无下一档数据");
+					nextExtraRateNumLabel.setText("无下一档数据");
+				} else {
+					nextExtraThresholdNumLabel.setText(String.valueOf(nextfaithThreshold));
+					nextExtraRateNumLabel.setText(Attr.getRecoverByThreshold(nextfaithThreshold));
+				}
+			} else {
+				int fortitudeThreshold = EquipmentModel.getInstance().getCurrentThreshold(currentJob.getExtraAttr(),
+						"fortitude");
+				extraThresholdNumLabel.setText(String.valueOf(fortitudeThreshold));
+				extraRateNumLabel.setText(Attr.getFortitudeRateByThreshold(fortitudeThreshold));
+				int nextFortitudeThreshold = EquipmentModel.getInstance().getNextThreshold(currentJob.getExtraAttr(),
+						"fortitude");
+				if (nextFortitudeThreshold == -1) {
+					nextExtraThresholdNumLabel.setText("无下一档数据");
+					nextExtraRateNumLabel.setText("无下一档数据");
+				} else {
+					nextExtraThresholdNumLabel.setText(String.valueOf(nextFortitudeThreshold));
+					nextExtraRateNumLabel.setText(Attr.getFortitudeRateByThreshold(nextFortitudeThreshold));
+				}
+			}
 		}
 	}
 
@@ -679,7 +761,7 @@ public class MainWindow {
 							ePanel.refreshAttr();
 							calAttr();
 						}
-						
+
 					});
 				}
 

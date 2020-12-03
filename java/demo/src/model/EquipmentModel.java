@@ -52,6 +52,8 @@ public class EquipmentModel {
 	private List<Integer> fortitudeThreshold = new ArrayList<>();
 
 	private List<Integer> speedThreshold = new ArrayList<>();
+	
+	private List<Integer> faithThreshold = new ArrayList<>();
 
 	private static EquipmentModel instance;
 
@@ -90,7 +92,7 @@ public class EquipmentModel {
 		try {
 			InputStream is = new FileInputStream(new File(THRESHOLD_PATH));
 			Workbook excel = new XSSFWorkbook(is);
-			for (int sheetNum = 0; sheetNum < 5; sheetNum++) {
+			for (int sheetNum = 0; sheetNum < excel.getNumberOfSheets(); sheetNum++) {
 				Sheet sheet = excel.getSheetAt(sheetNum);
 				List<Integer> list = getThresholdListByType(sheet.getSheetName());
 				for (int rowNum = 1; rowNum <= sheet.getLastRowNum(); rowNum++) {
@@ -248,6 +250,8 @@ public class EquipmentModel {
 			return fortitudeThreshold;
 		case "speed":
 			return speedThreshold;
+		case "faith":
+			return faithThreshold;
 		default:
 			throw new Error("attr type error");
 		}

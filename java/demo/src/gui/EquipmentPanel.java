@@ -139,9 +139,9 @@ public class EquipmentPanel extends JPanel {
 		setDirectHit(equipment.getAttr().getDirectHit());
 		setDetermination(equipment.getAttr().getDetermination());
 		if (damageType == Job.DAMAGE_TYPE_PHYSICAL) {
-			setExtra(equipment.getAttr().getSkillSpeed());
+			setSpeed(equipment.getAttr().getSkillSpeed());
 		} else {
-			setExtra(equipment.getAttr().getSpellSpeed());
+			setSpeed(equipment.getAttr().getSpellSpeed());
 		}
 		if (extraType == Job.EXTRA_ATTR_TYPE_FAITH) {
 			setExtra(equipment.getAttr().getFaith());

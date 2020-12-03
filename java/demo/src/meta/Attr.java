@@ -323,7 +323,8 @@ public class Attr implements Cloneable {
 	 * @return
 	 */
 	public static String getRecoverByThreshold(int threshold) {
-		return String.valueOf(200 + (threshold - 340) / 22);
+		int rate = (threshold - 340) * 150 / 3300 + 200;
+		return String.valueOf(rate);
 	}
 
 	@Override
