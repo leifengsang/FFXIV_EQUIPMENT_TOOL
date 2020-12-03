@@ -80,19 +80,18 @@ public abstract class Job {
 	 * 装备一件装备
 	 * @param equipment
 	 */
-	public void equip(Equipment equipment) {
+	public String equip(Equipment equipment) {
 		if (equipment.getPosition() > Equipment.POS_LIMIT) {
-			System.out.println("非法部位！");
-			return;
+			return "非法部位！";
 		}
 
 		if (equipment.getPosition() == Equipment.POS_SECONDARY) {
 			if (!isEnableSecondary()) {
-				System.out.println("主武器未装备或不支持副手！");
-				return;
+				return "该职业不支持副手！";
 			}
 		}
 
 		equipmentMap.put(equipment.getPosition(), equipment);
+		return null;
 	}
 }

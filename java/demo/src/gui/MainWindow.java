@@ -741,7 +741,12 @@ public class MainWindow {
 						String name = ((JRadioButton) e.getSource()).getText();
 						name = name.substring(name.indexOf(']') + 1);
 						Equipment currentEquipment = EquipmentModel.getInstance().getEquipmentByName(name);
-						currentJob.equip(currentEquipment);
+						String msg = currentJob.equip(currentEquipment);
+						if (msg != null) {
+							JOptionPane.showMessageDialog(null, msg, "装备时发生错误", JOptionPane.ERROR_MESSAGE);
+							group.clearSelection();
+							return;
+						}
 						calAttr();
 					}
 				}
