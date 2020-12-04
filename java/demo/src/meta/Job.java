@@ -34,6 +34,9 @@ public abstract class Job {
 	private void calAttr() {
 		attr.init();
 		for (Equipment equipment : equipmentMap.values()) {
+			if(equipment == null){
+				continue;
+			}
 			attr.add(equipment.getAttr());
 		}
 	}
@@ -91,7 +94,30 @@ public abstract class Job {
 			}
 		}
 
+		if (equipment.getPosition() == Equipment.POS_RING1) {
+			Equipment ep = equipmentMap.get(Equipment.POS_RING2);
+			if (ep != null && equipment.getName().equals(ep.getName())
+					&& equipment.getType() == Equipment.TYPE_COMMON) {
+				return "蓝色戒指只能同时准备一枚！";
+			}
+		} else if (equipment.getPosition() == Equipment.POS_RING2) {
+			Equipment ep = equipmentMap.get(Equipment.POS_RING1);
+			if (ep != null && equipment.getName().equals(ep.getName())
+					&& equipment.getType() == Equipment.TYPE_COMMON) {
+				return "蓝色戒指只能同时准备一枚！";
+			}
+		}
+
 		equipmentMap.put(equipment.getPosition(), equipment);
 		return null;
 	}
+
+	/**
+	 * 移除指定部位的装备
+	 * @param position
+	 */
+	public void removeEquipmentByPosition(int position) {
+		equipmentMap.put(position, null);
+	}
+
 }

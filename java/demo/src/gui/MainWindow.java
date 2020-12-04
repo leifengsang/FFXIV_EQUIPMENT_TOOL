@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -38,7 +39,7 @@ import javax.swing.UIManager;
 import meta.Attr;
 import meta.Equipment;
 import meta.Job;
-import model.EquipmentModel;
+import model.Model;
 
 public class MainWindow {
 
@@ -320,7 +321,7 @@ public class MainWindow {
 		filterPanel.setLayout(null);
 
 		JComboBox<String> jobComboBox = new JComboBox<>();
-		for (String job : EquipmentModel.Job_LIST) {
+		for (String job : Model.Job_LIST) {
 			jobComboBox.addItem(job);
 		}
 		jobComboBox.setBounds(59, 13, 107, 24);
@@ -405,16 +406,16 @@ public class MainWindow {
 				int language = 0;
 				switch ((String) languageComboBox.getSelectedItem()) {
 				case "日本語":
-					language = EquipmentModel.LANG_JP;
+					language = Model.LANG_JP;
 					break;
 				case "english":
-					language = EquipmentModel.LANG_EN;
+					language = Model.LANG_EN;
 					break;
 				default:
 					return;
 				}
-				if (EquipmentModel.getInstance().getLanguage() != language) {
-					EquipmentModel.getInstance().setLanguage(language);
+				if (Model.getInstance().getLanguage() != language) {
+					Model.getInstance().setLanguage(language);
 					layoutEquipmentPanel();
 				}
 			}
@@ -532,7 +533,7 @@ public class MainWindow {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		List<Equipment> equipmentList = EquipmentModel.getInstance().getEquipmentByLevelAndJob(clazz, floor, ceil);
+		List<Equipment> equipmentList = Model.getInstance().getEquipmentByLevelAndJob(clazz, floor, ceil);
 		for (Equipment equipment : equipmentList) {
 			equipmentMap.get(equipment.getPosition()).add(equipment);
 		}
@@ -578,11 +579,11 @@ public class MainWindow {
 	private void calAttr() {
 		Attr attr = currentJob.getAttr();
 		criticalHitNumLabel.setText(String.valueOf(attr.getCriticalHit()));
-		int criticalHitThreshold = EquipmentModel.getInstance().getCurrentThreshold(attr.getCriticalHit(),
+		int criticalHitThreshold = Model.getInstance().getCurrentThreshold(attr.getCriticalHit(),
 				"criticalHit");
 		criticalHitThresholdNumLabel.setText(String.valueOf(criticalHitThreshold));
 		criticalHitRateNumLabel.setText(Attr.getCriticalHitRateByThreshold(criticalHitThreshold));
-		int nextCriticalHitThreshold = EquipmentModel.getInstance().getNextThreshold(attr.getCriticalHit(),
+		int nextCriticalHitThreshold = Model.getInstance().getNextThreshold(attr.getCriticalHit(),
 				"criticalHit");
 		if (nextCriticalHitThreshold == -1) {
 			nextCriticalHitThresholdNumLabel.setText("无下一档数据");
@@ -593,10 +594,10 @@ public class MainWindow {
 		}
 
 		directHitNumLabel.setText(String.valueOf(attr.getDirectHit()));
-		int directHitThreshold = EquipmentModel.getInstance().getCurrentThreshold(attr.getDirectHit(), "directHit");
+		int directHitThreshold = Model.getInstance().getCurrentThreshold(attr.getDirectHit(), "directHit");
 		directHitThresholdNumLabel.setText(String.valueOf(directHitThreshold));
 		directHitRateNumLabel.setText(Attr.getDirectHitRateByThreshold(directHitThreshold));
-		int nextDirectHitThreshold = EquipmentModel.getInstance().getNextThreshold(attr.getDirectHit(), "directHit");
+		int nextDirectHitThreshold = Model.getInstance().getNextThreshold(attr.getDirectHit(), "directHit");
 		if (nextDirectHitThreshold == -1) {
 			nextDirectHitThresholdNumLabel.setText("无下一档数据");
 			nextDirectHitRateNumLabel.setText("无下一档数据");
@@ -606,11 +607,11 @@ public class MainWindow {
 		}
 
 		determinationNumLabel.setText(String.valueOf(attr.getDetermination()));
-		int determinationThreshold = EquipmentModel.getInstance().getCurrentThreshold(attr.getDetermination(),
+		int determinationThreshold = Model.getInstance().getCurrentThreshold(attr.getDetermination(),
 				"determination");
 		determinationThresholdNumLabel.setText(String.valueOf(determinationThreshold));
 		determinationRateNumLabel.setText(Attr.getDeterminationRateByThreshold(determinationThreshold));
-		int nextDeterminationThreshold = EquipmentModel.getInstance().getNextThreshold(attr.getDetermination(),
+		int nextDeterminationThreshold = Model.getInstance().getNextThreshold(attr.getDetermination(),
 				"determination");
 		if (nextDeterminationThreshold == -1) {
 			nextDeterminationThresholdNumLabel.setText("无下一档数据");
@@ -621,10 +622,10 @@ public class MainWindow {
 		}
 
 		speedNumLabel.setText(String.valueOf(currentJob.getSpeed()));
-		int speedThreshold = EquipmentModel.getInstance().getCurrentThreshold(currentJob.getSpeed(), "speed");
+		int speedThreshold = Model.getInstance().getCurrentThreshold(currentJob.getSpeed(), "speed");
 		speedThresholdNumLabel.setText(String.valueOf(speedThreshold));
 		gcdNumLabel.setText(Attr.getGcdByThreshold(speedThreshold));
-		int nextSpeedThreshold = EquipmentModel.getInstance().getNextThreshold(currentJob.getSpeed(), "speed");
+		int nextSpeedThreshold = Model.getInstance().getNextThreshold(currentJob.getSpeed(), "speed");
 		if (nextSpeedThreshold == -1) {
 			nextSpeedThresholdNumLabel.setText("无下一档数据");
 			nextGcdNumLabel.setText("无下一档数据");
@@ -637,11 +638,11 @@ public class MainWindow {
 			extraNumLabel.setText(String.valueOf(currentJob.getExtraAttr()));
 			int extraAttrType = currentJob.getExtraAttrType();
 			if (extraAttrType == Job.EXTRA_ATTR_TYPE_FAITH) {
-				int faithThreshold = EquipmentModel.getInstance().getCurrentThreshold(currentJob.getExtraAttr(),
+				int faithThreshold = Model.getInstance().getCurrentThreshold(currentJob.getExtraAttr(),
 						"faith");
 				extraThresholdNumLabel.setText(String.valueOf(faithThreshold));
 				extraRateNumLabel.setText(Attr.getRecoverByThreshold(faithThreshold));
-				int nextfaithThreshold = EquipmentModel.getInstance().getNextThreshold(currentJob.getExtraAttr(),
+				int nextfaithThreshold = Model.getInstance().getNextThreshold(currentJob.getExtraAttr(),
 						"faith");
 				if (nextfaithThreshold == -1) {
 					nextExtraThresholdNumLabel.setText("无下一档数据");
@@ -651,11 +652,11 @@ public class MainWindow {
 					nextExtraRateNumLabel.setText(Attr.getRecoverByThreshold(nextfaithThreshold));
 				}
 			} else {
-				int fortitudeThreshold = EquipmentModel.getInstance().getCurrentThreshold(currentJob.getExtraAttr(),
+				int fortitudeThreshold = Model.getInstance().getCurrentThreshold(currentJob.getExtraAttr(),
 						"fortitude");
 				extraThresholdNumLabel.setText(String.valueOf(fortitudeThreshold));
 				extraRateNumLabel.setText(Attr.getFortitudeRateByThreshold(fortitudeThreshold));
-				int nextFortitudeThreshold = EquipmentModel.getInstance().getNextThreshold(currentJob.getExtraAttr(),
+				int nextFortitudeThreshold = Model.getInstance().getNextThreshold(currentJob.getExtraAttr(),
 						"fortitude");
 				if (nextFortitudeThreshold == -1) {
 					nextExtraThresholdNumLabel.setText("无下一档数据");
@@ -669,7 +670,7 @@ public class MainWindow {
 	}
 
 	private void initEquipment() {
-		for (int i = 1; i < Equipment.POS_LIMIT; i++) {
+		for (int i = 1; i <= Equipment.POS_LIMIT; i++) {
 			List<Equipment> list = equipmentMap.get(i);
 			if (list == null) {
 				list = new ArrayList<>();
@@ -683,33 +684,33 @@ public class MainWindow {
 	private void layoutEquipmentPanel() {
 		equipmentPanel.removeAll();
 		offsetY = 0;
-		layoutSinglePart("武器", 1);
+		layoutSinglePart("武器", Equipment.POS_ARMS);
 
 		if (currentJob.isEnableSecondary()) {
-			layoutSinglePart("副手", 2);
+			layoutSinglePart("副手", Equipment.POS_SECONDARY);
 		}
 
-		layoutSinglePart("头部", 3);
+		layoutSinglePart("头部", Equipment.POS_HEAD);
 
-		layoutSinglePart("身体", 4);
+		layoutSinglePart("身体", Equipment.POS_BODY);
 
-		layoutSinglePart("手部", 5);
+		layoutSinglePart("手部", Equipment.POS_HANDS);
 
-		layoutSinglePart("腰部", 6);
+		layoutSinglePart("腰部", Equipment.POS_WAIST);
 
-		layoutSinglePart("腿部", 7);
+		layoutSinglePart("腿部", Equipment.POS_LEGS);
 
-		layoutSinglePart("脚部", 8);
+		layoutSinglePart("脚部", Equipment.POS_FEET);
 
-		layoutSinglePart("耳部", 9);
+		layoutSinglePart("耳部", Equipment.POS_EARRINGS);
 
-		layoutSinglePart("颈部", 10);
+		layoutSinglePart("颈部", Equipment.POS_NECKLACE);
 
-		layoutSinglePart("腕部", 11);
+		layoutSinglePart("腕部", Equipment.POS_BRACELETS);
 
-		layoutSinglePart("戒指1", 12);
+		layoutSinglePart("戒指1", Equipment.POS_RING1);
 
-		layoutSinglePart("戒指2", 12);
+		layoutSinglePart("戒指2", Equipment.POS_RING2);
 
 		equipmentPanel.setPreferredSize(new Dimension(equipmentPanel.getWidth(), offsetY));
 		equipmentPanel.repaint();
@@ -724,6 +725,23 @@ public class MainWindow {
 		offsetY += SINGLE_PART_HEIGHT;
 
 		ButtonGroup group = new ButtonGroup();
+
+		JButton clearBtn = new JButton("取消装备");
+		clearBtn.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		clearBtn.setBounds(HEAD_NAME_WIDTH - 100, 0, 100, SINGLE_PART_HEIGHT);
+		titleLabel.add(clearBtn);
+		clearBtn.addMouseListener(new MouseAdapter() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				super.mouseClicked(e);
+				group.clearSelection();
+				currentJob.removeEquipmentByPosition(position);
+				calAttr();
+			}
+
+		});
+
 		List<Equipment> list = equipmentMap.get(position);
 		for (Equipment equipment : list) {
 			EquipmentPanel ePanel = new EquipmentPanel(equipment, currentJob.getDamageType(),
@@ -740,11 +758,14 @@ public class MainWindow {
 					if (radioBtn.isSelected()) {
 						String name = ((JRadioButton) e.getSource()).getText();
 						name = name.substring(name.indexOf(']') + 1);
-						Equipment currentEquipment = EquipmentModel.getInstance().getEquipmentByName(name);
+						String key = name + "#" + position;
+						Equipment currentEquipment = Model.getInstance().getEquipmentByKey(key);
 						String msg = currentJob.equip(currentEquipment);
 						if (msg != null) {
 							JOptionPane.showMessageDialog(null, msg, "装备时发生错误", JOptionPane.ERROR_MESSAGE);
 							group.clearSelection();
+							currentJob.removeEquipmentByPosition(position);
+							calAttr();
 							return;
 						}
 						calAttr();

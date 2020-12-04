@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import model.EquipmentModel;
+import model.Model;
 
 public class Equipment {
 	public static final int POS_ARMS = 1; //武器
@@ -106,7 +106,8 @@ public class Equipment {
 	}
 
 	public String getName() {
-		return EquipmentModel.getInstance().getEquipmentNameById(id);
+		String key = id.split("#")[0];
+		return Model.getInstance().getEquipmentNameById(key);
 	}
 
 	public Attr getAttr() {
