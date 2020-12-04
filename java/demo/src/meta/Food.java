@@ -1,5 +1,7 @@
 package meta;
 
+import model.Model;
+
 public class Food {
 
 	private String id;
@@ -83,8 +85,7 @@ public class Food {
 	}
 
 	public String getName() {
-		//TODO
-		return "";
+		return Model.getInstance().getNameById(id);
 	}
 
 }

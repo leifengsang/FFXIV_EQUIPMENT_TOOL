@@ -39,15 +39,17 @@ public class Equipment {
 
 	public static final int[] SUB_EQUIPMENT_LIST = { 6, 9, 10, 11, 12, 13 };
 
-	public static final int TYPE_PURPLE = 1; //紫
+	public static final int TYPE_EPIC = 1; //紫
 
-	public static final int TYPE_COMMON = 2; //蓝
+	public static final int TYPE_RARE = 2; //蓝
 
-	public static final int TYPE_HQ = 3; //绿
+	public static final int TYPE_UN_COMMON_HQ = 3; //制作绿
 
-	public static final int TYPE_UN_COMMON = 4; //白
+	public static final int TYPE_COMMON = 4; //白
 
 	public static final int TYPE_MAGIC = 5; //粉
+	
+	public static final int TYPE_UN_COMMON = 6; //副本绿
 
 	/**
 	 * 装备ID
@@ -107,7 +109,7 @@ public class Equipment {
 
 	public String getName() {
 		String key = id.split("#")[0];
-		return Model.getInstance().getEquipmentNameById(key);
+		return Model.getInstance().getNameById(key);
 	}
 
 	public Attr getAttr() {
@@ -208,5 +210,20 @@ public class Equipment {
 	 */
 	public boolean isBattle() {
 		return this.attr.getVIT() != 0;
+	}
+
+	public String getMateriaStr() {
+		String ret = "";
+		for (int i = 0; i < 5; i++) {
+			Materia materia = materiaMap.get(i);
+			if (materia == null) {
+				continue;
+			}
+			if (!ret.equals("")) {
+				ret += "#";
+			}
+			ret += materia.getNameStr();
+		}
+		return ret;
 	}
 }

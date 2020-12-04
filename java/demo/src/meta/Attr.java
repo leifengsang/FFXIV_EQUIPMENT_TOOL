@@ -185,6 +185,74 @@ public class Attr implements Cloneable {
 		this.VIT += attr.VIT;
 	}
 
+	public void add(Food food) {
+		if (food == null) {
+			return;
+		}
+		addAttrByType(food.getAttrType1(), food.getValue1(), food.getLimit1());
+		addAttrByType(food.getAttrType2(), food.getValue2(), food.getLimit2());
+	}
+
+	private void addAttrByType(String type, int value, int limit) {
+		if (type.equals("")) {
+			return;
+		}
+		switch (type) {
+		case "criticalHit":
+			if (limit == -1) {
+				this.criticalHit += value;
+			} else {
+				this.criticalHit += Math.min(this.criticalHit * value / 100, limit);
+			}
+			break;
+		case "directHit":
+			if (limit == -1) {
+				this.directHit += value;
+			} else {
+				this.directHit += Math.min(this.directHit * value / 100, limit);
+			}
+			break;
+		case "determination":
+			if (limit == -1) {
+				this.determination += value;
+			} else {
+				this.determination += Math.min(this.determination * value / 100, limit);
+			}
+			break;
+		case "faith":
+			if (limit == -1) {
+				this.faith += value;
+			} else {
+				this.faith += Math.min(this.faith * value / 100, limit);
+			}
+			break;
+		case "fortitude":
+			if (limit == -1) {
+				this.fortitude += value;
+			} else {
+				this.fortitude += Math.min(this.fortitude * value / 100, limit);
+			}
+			break;
+		case "skillSpeed":
+			if (limit == -1) {
+				this.skillSpeed += value;
+			} else {
+				this.skillSpeed += Math.min(this.skillSpeed * value / 100, limit);
+			}
+			break;
+		case "spellSpeed":
+			if (limit == -1) {
+				this.spellSpeed += value;
+			} else {
+				this.spellSpeed += Math.min(this.spellSpeed * value / 100, limit);
+			}
+			break;
+		default:
+			throw new Error("attr type error!");
+		}
+
+	}
+
 	/**
 	 * 获得属性上限
 	 * @return
@@ -335,7 +403,7 @@ public class Attr implements Cloneable {
 	@Override
 	public String toString() {
 		return "暴击:" + criticalHit + ", 直击:" + directHit + ", 信念:" + determination + ", 技速:" + skillSpeed + ", 唱速:"
-				+ spellSpeed + ", 信仰:" + faith + ", 坚韧:" + fortitude + ", 耐力:" + VIT;
+				+ spellSpeed + ", 信仰:" + faith + ", 坚韧:" + fortitude;
 	}
 
 }

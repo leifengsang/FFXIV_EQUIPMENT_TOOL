@@ -89,4 +89,8 @@ public class Materia {
 	public String getName() {
 		return String.format(MATERIA_FORMATTER, NAME_MAP.get((String) this.key), (int) value, ATTR_VALUE[(int) value]);
 	}
+
+	public String getNameStr() {
+		return String.format("%s%d", NAME_MAP.get((String) this.key), (int) value);
+	}
 }

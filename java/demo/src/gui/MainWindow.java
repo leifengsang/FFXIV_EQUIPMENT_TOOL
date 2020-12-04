@@ -16,12 +16,17 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -38,6 +43,7 @@ import javax.swing.UIManager;
 
 import meta.Attr;
 import meta.Equipment;
+import meta.Food;
 import meta.Job;
 import model.Model;
 
@@ -48,6 +54,7 @@ public class MainWindow {
 	public static final int HEAD_MATERIA_WIDTH = 100;
 
 	private Map<Integer, List<Equipment>> equipmentMap = new HashMap<Integer, List<Equipment>>();
+	private Map<Integer, ButtonGroup> groupMap = new HashMap<>();
 	private Job currentJob;
 	private int offsetY = 0;
 	private static final int SINGLE_PART_HEIGHT = 20;
@@ -139,6 +146,7 @@ public class MainWindow {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
 		frame.getContentPane().setLayout(null);
+		frame.setIconImage(Toolkit.getDefaultToolkit().getImage("../../resource/icon.jpg"));
 
 		JPanel attrPanel = new JPanel();
 		attrPanel.setBounds(frame.getWidth() - 300, 10, 300, frame.getHeight() - 10 - TITLE_HEIGHT);
@@ -425,6 +433,19 @@ public class MainWindow {
 		languageLabel.setBounds(808, 16, 45, 18);
 		filterPanel.add(languageLabel);
 
+		JButton exportBtn = new JButton("导出");
+		exportBtn.setBounds(502, 12, 93, 27);
+		filterPanel.add(exportBtn);
+		exportBtn.addMouseListener(new MouseAdapter() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				super.mouseClicked(e);
+				export();
+			}
+
+		});
+
 		JPanel simulatorPanel = new JPanel();
 		simulatorPanel.setBounds(10, 60, frame.getWidth() - 300 - 10, frame.getHeight() - 60 - TITLE_HEIGHT);
 		frame.getContentPane().add(simulatorPanel);
@@ -579,12 +600,10 @@ public class MainWindow {
 	private void calAttr() {
 		Attr attr = currentJob.getAttr();
 		criticalHitNumLabel.setText(String.valueOf(attr.getCriticalHit()));
-		int criticalHitThreshold = Model.getInstance().getCurrentThreshold(attr.getCriticalHit(),
-				"criticalHit");
+		int criticalHitThreshold = Model.getInstance().getCurrentThreshold(attr.getCriticalHit(), "criticalHit");
 		criticalHitThresholdNumLabel.setText(String.valueOf(criticalHitThreshold));
 		criticalHitRateNumLabel.setText(Attr.getCriticalHitRateByThreshold(criticalHitThreshold));
-		int nextCriticalHitThreshold = Model.getInstance().getNextThreshold(attr.getCriticalHit(),
-				"criticalHit");
+		int nextCriticalHitThreshold = Model.getInstance().getNextThreshold(attr.getCriticalHit(), "criticalHit");
 		if (nextCriticalHitThreshold == -1) {
 			nextCriticalHitThresholdNumLabel.setText("无下一档数据");
 			nextCriticalHitRateNumLabel.setText("无下一档数据");
@@ -607,12 +626,10 @@ public class MainWindow {
 		}
 
 		determinationNumLabel.setText(String.valueOf(attr.getDetermination()));
-		int determinationThreshold = Model.getInstance().getCurrentThreshold(attr.getDetermination(),
-				"determination");
+		int determinationThreshold = Model.getInstance().getCurrentThreshold(attr.getDetermination(), "determination");
 		determinationThresholdNumLabel.setText(String.valueOf(determinationThreshold));
 		determinationRateNumLabel.setText(Attr.getDeterminationRateByThreshold(determinationThreshold));
-		int nextDeterminationThreshold = Model.getInstance().getNextThreshold(attr.getDetermination(),
-				"determination");
+		int nextDeterminationThreshold = Model.getInstance().getNextThreshold(attr.getDetermination(), "determination");
 		if (nextDeterminationThreshold == -1) {
 			nextDeterminationThresholdNumLabel.setText("无下一档数据");
 			nextDeterminationRateNumLabel.setText("无下一档数据");
@@ -638,12 +655,10 @@ public class MainWindow {
 			extraNumLabel.setText(String.valueOf(currentJob.getExtraAttr()));
 			int extraAttrType = currentJob.getExtraAttrType();
 			if (extraAttrType == Job.EXTRA_ATTR_TYPE_FAITH) {
-				int faithThreshold = Model.getInstance().getCurrentThreshold(currentJob.getExtraAttr(),
-						"faith");
+				int faithThreshold = Model.getInstance().getCurrentThreshold(currentJob.getExtraAttr(), "faith");
 				extraThresholdNumLabel.setText(String.valueOf(faithThreshold));
 				extraRateNumLabel.setText(Attr.getRecoverByThreshold(faithThreshold));
-				int nextfaithThreshold = Model.getInstance().getNextThreshold(currentJob.getExtraAttr(),
-						"faith");
+				int nextfaithThreshold = Model.getInstance().getNextThreshold(currentJob.getExtraAttr(), "faith");
 				if (nextfaithThreshold == -1) {
 					nextExtraThresholdNumLabel.setText("无下一档数据");
 					nextExtraRateNumLabel.setText("无下一档数据");
@@ -712,9 +727,63 @@ public class MainWindow {
 
 		layoutSinglePart("戒指2", Equipment.POS_RING2);
 
+		layoutFoodPanel();
+
 		equipmentPanel.setPreferredSize(new Dimension(equipmentPanel.getWidth(), offsetY));
 		equipmentPanel.repaint();
 		equipmentPanel.revalidate();
+	}
+
+	private void layoutFoodPanel() {
+		JLabel titleLabel = new BorderLabel("食物");
+		titleLabel.setBounds(0, offsetY, equipmentPanel.getWidth(), SINGLE_PART_HEIGHT);
+		titleLabel.setFont(new Font("alias", Font.PLAIN, 16));
+		equipmentPanel.add(titleLabel);
+		offsetY += SINGLE_PART_HEIGHT;
+
+		ButtonGroup group = new ButtonGroup();
+
+		JButton clearBtn = new JButton("取消食物");
+		clearBtn.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		clearBtn.setBounds(HEAD_NAME_WIDTH - 100, 0, 100, SINGLE_PART_HEIGHT);
+		titleLabel.add(clearBtn);
+		clearBtn.addMouseListener(new MouseAdapter() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				super.mouseClicked(e);
+				group.clearSelection();
+				currentJob.setFood(null);
+				calAttr();
+			}
+
+		});
+
+		List<Food> list = Model.getInstance().getFoodList();
+		for (Food food : list) {
+			FoodPanel foodPanel = new FoodPanel(food, currentJob.getDamageType(), currentJob.getExtraAttrType());
+			foodPanel.setLocation(0, offsetY);
+			equipmentPanel.add(foodPanel);
+			offsetY += foodPanel.getHeight();
+
+			JRadioButton radioBtn = foodPanel.getNameBtn();
+			radioBtn.addItemListener(new ItemListener() {
+
+				@Override
+				public void itemStateChanged(ItemEvent e) {
+					if (radioBtn.isSelected()) {
+						String name = ((JRadioButton) e.getSource()).getText();
+						Food currentFood = Model.getInstance().getFoodByName(name);
+						currentJob.setFood(currentFood);
+						calAttr();
+					}
+				}
+			});
+
+			group.add(radioBtn);
+		}
+
+		groupMap.put(-1, group);
 	}
 
 	private void layoutSinglePart(String title, int position) {
@@ -795,5 +864,132 @@ public class MainWindow {
 
 			group.add(radioBtn);
 		}
+
+		groupMap.put(position, group);
+	}
+
+	private void export() {
+		try {
+			String jobName = currentJob.getClass().getName().replace("meta.", "");
+			String path = Model.EXPORT_PATH + jobName + ".txt";
+			File file = new File(path);
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+			BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+			bw.write("职业：" + jobName);
+			bw.newLine();
+			bw.write("[装备]");
+			bw.newLine();
+			for (int i = 1; i <= Equipment.POS_LIMIT; i++) {
+				writeEquipment(bw, i);
+			}
+			writeFood(bw);
+			writeAttr(bw);
+			bw.write("support by 雷锋桑@海猫茶屋|Liberated Flame@Asura");
+
+			bw.flush();
+			bw.close();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getClass().getName() + " : " + e.getMessage(), "导出时发生错误",
+					JOptionPane.ERROR_MESSAGE);
+		}
+
+	}
+
+	private void writeAttr(BufferedWriter bw) throws IOException {
+		bw.write("[属性]");
+		bw.newLine();
+		bw.write("暴击：" + criticalHitNumLabel.getText());
+		bw.newLine();
+		bw.write("直击：" + directHitNumLabel.getText());
+		bw.newLine();
+		bw.write("信念：" + determinationNumLabel.getText());
+		bw.newLine();
+		bw.write(speedLabel.getText() + "：" + speedNumLabel.getText());
+		bw.newLine();
+		if (extraPanel.isVisible()) {
+			bw.write(extraLabel.getText() + "：" + extraNumLabel.getText());
+			bw.newLine();
+		}
+	}
+
+	private void writeFood(BufferedWriter bw) throws IOException {
+		String name = getSelectedName(-1, false);
+		bw.write("食物：" + name);
+		bw.newLine();
+	}
+
+	private void writeEquipment(BufferedWriter bw, int position) throws IOException {
+		if (position == Equipment.POS_SECONDARY && !currentJob.isEnableSecondary()) {
+			return;
+		}
+		String name = getSelectedName(position, true);
+		String typeName;
+		switch (position) {
+		case Equipment.POS_ARMS:
+			typeName = "武器";
+			break;
+		case Equipment.POS_SECONDARY:
+			typeName = "副手";
+			break;
+		case Equipment.POS_HEAD:
+			typeName = "头部";
+			break;
+		case Equipment.POS_BODY:
+			typeName = "身体";
+			break;
+		case Equipment.POS_HANDS:
+			typeName = "手部";
+			break;
+		case Equipment.POS_WAIST:
+			typeName = "腰部";
+			break;
+		case Equipment.POS_LEGS:
+			typeName = "腿部";
+			break;
+		case Equipment.POS_FEET:
+			typeName = "脚部";
+			break;
+		case Equipment.POS_EARRINGS:
+			typeName = "耳部";
+			break;
+		case Equipment.POS_NECKLACE:
+			typeName = "颈部";
+			break;
+		case Equipment.POS_BRACELETS:
+			typeName = "腕部";
+			break;
+		case Equipment.POS_RING1:
+			typeName = "戒指1";
+			break;
+		case Equipment.POS_RING2:
+			typeName = "戒指2";
+			break;
+		default:
+			return;
+		}
+		bw.write(typeName + "：" + name);
+		if (!name.equals("无")) {
+			Equipment equipment = Model.getInstance().getEquipmentByKey(name + "#" + position);
+			bw.write(String.format(", 魔晶石：[%s]", equipment.getMateriaStr()));
+		}
+		bw.newLine();
+	}
+
+	private String getSelectedName(int position, boolean hasLevel) {
+		String ret = "无";
+		Enumeration<AbstractButton> elements = groupMap.get(position).getElements();
+		while (elements.hasMoreElements()) {
+			AbstractButton btn = elements.nextElement();
+			if (btn.isSelected()) {
+				ret = btn.getText();
+				if (hasLevel) {
+					ret = ret.substring(ret.indexOf(']') + 1);
+				}
+				break;
+			}
+		}
+		return ret;
 	}
 }
