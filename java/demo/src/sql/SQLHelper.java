@@ -22,7 +22,7 @@ public class SQLHelper {
 
 	private ResultSet resultSet;
 
-	private String dbPath = "../../tool.db";
+	private String dbPath = "../../db/tool.db";
 
 	private SQLHelper() {
 

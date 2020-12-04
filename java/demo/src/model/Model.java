@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,8 @@ import meta.Job;
 import sql.SQLHelper;
 
 public class Model {
+	
+	public static final String EXPORT_PATH = "../../export/";
 
 	public static final String[] Job_LIST = { "PLD", "WAR", "DRK", "GNB", "WHM", "SCH", "AST", "MNK", "DRG", "NIN",
 			"SAM", "BRD", "MCH", "DNC", "BLM", "SMN", "RDM" };
@@ -48,7 +51,7 @@ public class Model {
 
 	private int language = LANG_JP;
 
-	private static final String THRESHOLD_PATH = "../../threshold.xlsx";
+	private static final String THRESHOLD_PATH = "../../resource/threshold.xlsx";
 
 	private List<Integer> criticalHitThreshold = new ArrayList<>();
 
@@ -80,6 +83,10 @@ public class Model {
 		return equipmentList;
 	}
 
+	public List<Food> getFoodList() {
+		return foodList;
+	}
+
 	public int getLanguage() {
 		return language;
 	}
@@ -104,30 +111,31 @@ public class Model {
 				food.setId(SQLHelper.getStringValue(ret, "id"));
 				food.setLevel(SQLHelper.getIntValue(ret, "level"));
 				food.setAttrType1(SQLHelper.getStringValue(ret, "attrType1"));
-				//10% 168
-				//10
 				String attrStr = SQLHelper.getStringValue(ret, "attr1");
-				String[] strs = attrStr.split(" ");
-				if (strs.length == 1) {
-					food.setValue1(Integer.parseInt(strs[0]));
-					food.setLimit1(-1);
-				} else if (strs.length == 2) {
-					String rate = (String) strs[0].subSequence(0, strs[0].length() - 1);
-					food.setValue1(Integer.parseInt(rate));
-					food.setLimit1(Integer.parseInt(strs[1]));
+				if (!attrStr.equals("")) {
+					String[] strs = attrStr.split(" ");
+					if (strs.length == 1) {
+						food.setValue1(Integer.parseInt(strs[0]));
+						food.setLimit1(-1);
+					} else if (strs.length == 2) {
+						String rate = (String) strs[0].subSequence(0, strs[0].length() - 1);
+						food.setValue1(Integer.parseInt(rate));
+						food.setLimit1(Integer.parseInt(strs[1]));
+					}
 				}
+
 				food.setAttrType2(SQLHelper.getStringValue(ret, "attrType2"));
-				//10% 168
-				//10
 				attrStr = SQLHelper.getStringValue(ret, "attr2");
-				strs = attrStr.split(" ");
-				if (strs.length == 1) {
-					food.setValue2(Integer.parseInt(strs[0]));
-					food.setLimit2(-1);
-				} else if (strs.length == 2) {
-					String rate = (String) strs[0].subSequence(0, strs[0].length() - 1);
-					food.setValue2(Integer.parseInt(rate));
-					food.setLimit2(Integer.parseInt(strs[1]));
+				if (!attrStr.equals("")) {
+					String[] strs = attrStr.split(" ");
+					if (strs.length == 1) {
+						food.setValue2(Integer.parseInt(strs[0]));
+						food.setLimit2(-1);
+					} else if (strs.length == 2) {
+						String rate = (String) strs[0].subSequence(0, strs[0].length() - 1);
+						food.setValue2(Integer.parseInt(rate));
+						food.setLimit2(Integer.parseInt(strs[1]));
+					}
 				}
 
 				foodList.add(food);
@@ -136,6 +144,8 @@ public class Model {
 		} catch (Exception e) {
 			System.out.println("从数据库加载食物数据失败！ type:" + e.getClass().getName() + ", error:" + e.getMessage());
 		}
+		
+		foodList.sort(Comparator.comparing(Food::getLevel).reversed());
 	}
 
 	@SuppressWarnings("resource")
@@ -259,7 +269,7 @@ public class Model {
 		return foodMap.get(name);
 	}
 
-	public String getEquipmentNameById(String id) {
+	public String getNameById(String id) {
 		return nameMap.get(id).get(language);
 	}
 
