@@ -8,6 +8,7 @@ base_url_na = 'https://na.finalfantasyxiv.com/'
 tab_url_list = []
 position_dict = {}
 job_dict = {}
+attr_dict = {}
 un_success_url_list = []
 
 
@@ -63,6 +64,7 @@ def get_equipment_by_category(type, lang, ignore):
             tab_url['url'] = current_url
             tab_url['name'] = name
             tab_url['level'] = level
+            tab_url['type'] = 1
             tab_url_list.append(tab_url)
 
 
@@ -134,6 +136,12 @@ def update_equipment(tab_url):
                                    equipment['type'] == 3 else 0
     model.update_equipment(equipment)
 
+    # 复制一份戒指
+    if equipment['position'] == 12:
+        equipment['position'] = 13
+        equipment['id'] += '#copy'
+        model.update_equipment(equipment)
+
 
 def constant_init():
     """
@@ -203,9 +211,17 @@ def constant_init():
     job_dict['占星術師'] = 'AST'
     job_dict['全クラス'] = 'ALL'
 
+    attr_dict['クリティカル'] = 'criticalHit'
+    attr_dict['ダイレクトヒット'] = 'directHit'
+    attr_dict['意思力'] = 'determination'
+    attr_dict['信仰'] = 'faith'
+    attr_dict['不屈'] = 'fortitude'
+    attr_dict['スキルスピード'] = 'skillSpeed'
+    attr_dict['スペルスピード'] = 'spellSpeed'
+
 
 def update_equipment_undone():
-    undone_list = model.get_url_undone()
+    undone_list = model.get_url_undone(1)
     for tab_url in undone_list:
         update_equipment(tab_url)
     if len(un_success_url_list) != 0:
@@ -226,11 +242,99 @@ def update_translator():
     update_translator_na()
 
 
+def hotfix():
+    model.hotfix()
+
+
+def update_food_url():
+    index = 1
+    while True:
+        url = base_url_jp + 'lodestone/playguide/db/item/?category2=5&page=1&category3=46&page={}'.format(index)
+        print('[{}]currentUrl:'.format(time.strftime("%H:%M:%S", time.localtime())) + url)
+        index += 1
+        text = get_text(url)
+        soup = BeautifulSoup(text, 'lxml')
+        code404 = soup.find('p', attrs={'class': 'db__result__0__txt'})
+        if code404 is not None:
+            break
+
+        tr_list = soup.find_all('tr')
+        for tr in tr_list:
+            a = tr.find('a', attrs={'class': 'db_popup db-table__txt--detail_link'})
+            # 不是食物tr
+            if a is None:
+                continue
+            current_url = base_url_jp + a['href']
+            name = a.string
+            id = current_url.split('/')[-2]
+            td = tr.find('td', attrs={'class': 'db-table__body--dark db-table__body--center'})
+            try:
+                level = int(td.string)
+            except:
+                continue
+
+            tab_url = {}
+            tab_url['id'] = id
+            tab_url['url'] = current_url
+            tab_url['name'] = name
+            tab_url['level'] = level
+            tab_url['type'] = 2
+            tab_url_list.append(tab_url)
+
+    model.update_url(tab_url_list)
+
+
+def update_food(tab_url):
+    print('[{}]start updating {}...'.format(time.strftime("%H:%M:%S", time.localtime()), tab_url['name']))
+    url = tab_url['url']
+    text = get_text(url)
+    if text is None:
+        print('[{}]can not get equipment where url={}'.format(time.strftime("%H:%M:%S", time.localtime()), url))
+        un_success_url_list.append(url)
+        return
+    soup = BeautifulSoup(text, 'lxml')
+    food = {}
+    food['id'] = tab_url['id']
+    food['name'] = tab_url['name']
+    food['level'] = tab_url['level']
+    attr_ul = soup.find('ul', attrs={'class': 'sys_hq_element'})
+
+    has_vit = False
+    if attr_ul is not None:
+        attr_li_list = attr_ul.find_all('li')
+        cnt = 1
+        for li in attr_li_list:
+            text = li.get_text()
+            # ダイレクトヒット +10% (上限168)
+            text_info = text.split(' ')
+            if text_info[0] == 'VIT':
+                has_vit = True
+                continue
+            attr_type = attr_dict.get(text_info[0])
+            if attr_type is None:
+                continue
+            food['attrType' + str(cnt)] = attr_type
+            food['attr' + str(cnt)] = text_info[1].strip('+')
+            if len(text_info) == 3:
+                food['attr' + str(cnt)] += ' ' + text_info[2].strip('(上限').strip(')')
+            cnt += 1
+
+    model.update_food(food, has_vit is False or food.get('attrType1') is None)
+
+
+def update_food_undone():
+    undone_list = model.get_url_undone(2)
+    for tab_url in undone_list:
+        update_food(tab_url)
+    if len(un_success_url_list) != 0:
+        print('unSuccessUrlList(size:{}):'.format(len(un_success_url_list)))
+        for url in un_success_url_list:
+            print(url)
+
+
 def main():
     constant_init()
-    # update_equipment_url()
-    # update_equipment_undone()
-    # update_translator()
+    update_food_undone()
 
 
 if __name__ == '__main__':
