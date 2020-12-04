@@ -17,10 +17,11 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import meta.Attr;
 import meta.Equipment;
+import meta.Food;
 import meta.Job;
 import sql.SQLHelper;
 
-public class EquipmentModel {
+public class Model {
 
 	public static final String[] Job_LIST = { "PLD", "WAR", "DRK", "GNB", "WHM", "SCH", "AST", "MNK", "DRG", "NIN",
 			"SAM", "BRD", "MCH", "DNC", "BLM", "SMN", "RDM" };
@@ -35,9 +36,15 @@ public class EquipmentModel {
 
 	private Map<String, Equipment> equipmentMap = new HashMap<>();//Map<name,equipment>
 
+	private List<Food> foodList = new ArrayList<>();
+
+	private Map<String, Food> foodMap = new HashMap<>();
+
 	private Map<String, Map<Integer, String>> nameMap = new HashMap<>();//Map<id,Map<language,name>>
 
-	private Map<String, Equipment> idMap = new HashMap<>();
+	private Map<String, Equipment> equipmentIdMap = new HashMap<>();
+
+	private Map<String, Food> foodIdMap = new HashMap<>();
 
 	private int language = LANG_JP;
 
@@ -52,19 +59,19 @@ public class EquipmentModel {
 	private List<Integer> fortitudeThreshold = new ArrayList<>();
 
 	private List<Integer> speedThreshold = new ArrayList<>();
-	
+
 	private List<Integer> faithThreshold = new ArrayList<>();
 
-	private static EquipmentModel instance;
+	private static Model instance;
 
-	public static EquipmentModel getInstance() {
+	public static Model getInstance() {
 		if (instance == null) {
-			instance = new EquipmentModel();
+			instance = new Model();
 		}
 		return instance;
 	}
 
-	private EquipmentModel() {
+	private Model() {
 		sqlHelper = SQLHelper.getInstance();
 		load();
 	}
@@ -83,8 +90,52 @@ public class EquipmentModel {
 
 	private void load() {
 		loadEquipment();
+		loadFood();
 		loadTranslator();
 		loadThreshold();
+	}
+
+	private void loadFood() {
+		String sql = "select * from food";
+		ResultSet ret = sqlHelper.execQuery(sql);
+		try {
+			while (ret.next()) {
+				Food food = new Food();
+				food.setId(SQLHelper.getStringValue(ret, "id"));
+				food.setLevel(SQLHelper.getIntValue(ret, "level"));
+				food.setAttrType1(SQLHelper.getStringValue(ret, "attrType1"));
+				//10% 168
+				//10
+				String attrStr = SQLHelper.getStringValue(ret, "attr1");
+				String[] strs = attrStr.split(" ");
+				if (strs.length == 1) {
+					food.setValue1(Integer.parseInt(strs[0]));
+					food.setLimit1(-1);
+				} else if (strs.length == 2) {
+					String rate = (String) strs[0].subSequence(0, strs[0].length() - 1);
+					food.setValue1(Integer.parseInt(rate));
+					food.setLimit1(Integer.parseInt(strs[1]));
+				}
+				food.setAttrType2(SQLHelper.getStringValue(ret, "attrType2"));
+				//10% 168
+				//10
+				attrStr = SQLHelper.getStringValue(ret, "attr2");
+				strs = attrStr.split(" ");
+				if (strs.length == 1) {
+					food.setValue2(Integer.parseInt(strs[0]));
+					food.setLimit2(-1);
+				} else if (strs.length == 2) {
+					String rate = (String) strs[0].subSequence(0, strs[0].length() - 1);
+					food.setValue2(Integer.parseInt(rate));
+					food.setLimit2(Integer.parseInt(strs[1]));
+				}
+
+				foodList.add(food);
+				foodIdMap.put(food.getId(), food);
+			}
+		} catch (Exception e) {
+			System.out.println("从数据库加载食物数据失败！ type:" + e.getClass().getName() + ", error:" + e.getMessage());
+		}
 	}
 
 	@SuppressWarnings("resource")
@@ -149,7 +200,7 @@ public class EquipmentModel {
 				equipment.setMoreSocket(SQLHelper.getBooleanValue(ret, "moreSocket"));
 
 				equipmentList.add(equipment);
-				idMap.put(equipment.getId(), equipment);
+				equipmentIdMap.put(equipment.getId(), equipment);
 			}
 		} catch (Exception e) {
 			System.out.println("从数据库加载装备数据失败！ type:" + e.getClass().getName() + ", error:" + e.getMessage());
@@ -177,14 +228,35 @@ public class EquipmentModel {
 		Map<Integer, String> translatorMap = nameMap.get(id);
 		if (translatorMap == null) {
 			translatorMap = new HashMap<>();
+			nameMap.put(id, translatorMap);
 		}
-		nameMap.put(id, translatorMap);
 		translatorMap.put(lang, name);
-		equipmentMap.put(name, idMap.get(id));
+
+		Equipment equipment = equipmentIdMap.get(id);
+		if (equipment != null) {
+			String key = name + "#" + equipment.getPosition();
+			equipmentMap.put(key, equipment);
+			if (equipment.getPosition() == Equipment.POS_RING1) {
+				equipment = equipmentIdMap.get(equipment.getId() + "#copy");
+				key = name + "#" + equipment.getPosition();
+				equipmentMap.put(key, equipment);
+			}
+			return;
+		}
+
+		Food food = foodIdMap.get(id);
+		if (food != null) {
+			foodMap.put(name, food);
+			return;
+		}
 	}
 
-	public Equipment getEquipmentByName(String name) {
-		return equipmentMap.get(name);
+	public Equipment getEquipmentByKey(String key) {
+		return equipmentMap.get(key);
+	}
+
+	public Food getFoodByName(String name) {
+		return foodMap.get(name);
 	}
 
 	public String getEquipmentNameById(String id) {
