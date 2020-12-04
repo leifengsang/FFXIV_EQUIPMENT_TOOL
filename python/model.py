@@ -14,7 +14,7 @@ class EquipmentModel(object):
     __db = None
 
     def __init__(self):
-        self.__db = EasySqlite('../tool.db')
+        self.__db = EasySqlite('../db/tool.db')
         self.__load()
 
     def __load(self):
@@ -171,37 +171,23 @@ class EquipmentModel(object):
             list.append(url)
         return list
 
-    def hotfix(self):
-        sql = 'select * from equipment'
-        result = self.__db.execute(sql)
+    def hotfix_get_list(self):
+        list = []
+        sql = 'select u.* from url as u inner join equipment as e where u.id=e.id and e.type=3 and e.position=12 and u.version!=?'
+        result = self.__db.execute(sql, [self.__version])
         for row in result:
-            if row['position'] != 12:
-                continue
-            row['id'] += '#copy'
-            row['position'] = 13
-            sql_hotfix_head = 'insert into equipment values'
-            sql_hotfix_values = ''
-            sql_hotfix_values += '('
-            sql_hotfix_values += "'" + row['id'] + "',"
-            sql_hotfix_values += "'" + row['name'] + "',"
-            sql_hotfix_values += str(row['type']) + ","
-            sql_hotfix_values += str(row['position']) + ","
-            sql_hotfix_values += str(row['level']) + ","
-            sql_hotfix_values += "'" + row['enableJobList'] + "',"
-            sql_hotfix_values += str(row['criticalHit']) + ","
-            sql_hotfix_values += str(row['directHit']) + ","
-            sql_hotfix_values += str(row['determination']) + ","
-            sql_hotfix_values += str(row['faith']) + ","
-            sql_hotfix_values += str(row['skillSpeed']) + ","
-            sql_hotfix_values += str(row['spellSpeed']) + ","
-            sql_hotfix_values += str(row['fortitude']) + ","
-            sql_hotfix_values += str(row['normalSocket']) + ","
-            sql_hotfix_values += str(row['moreSocket']) + ","
-            sql_hotfix_values += str(row['VIT'])
-            sql_hotfix_values += ')'
-            sql_hotfix = sql_hotfix_head + sql_hotfix_values
-            self.__db.execute(sql_hotfix)
-        print('[{}]hotfix success!'.format(time.strftime("%H:%M:%S", time.localtime())))
+            url = {}
+            url['id'] = row['id']
+            url['url'] = row['url']
+            url['name'] = row['name']
+            url['level'] = row['level']
+            list.append(url)
+        return list
+
+    def hotfix(self, id):
+        sql = 'update equipment set type=6 where id=?'
+        self.__db.execute(sql, [id])
+        self.__db.execute(sql, [id+'#copy'])
 
     def update_food(self, food, ignore):
         if self.__food_dict.get(food['id']) is None:

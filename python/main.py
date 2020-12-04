@@ -247,8 +247,22 @@ def update_translator():
 
 
 def hotfix():
-    model.hotfix()
+    tab_url_list = model.hotfix_get_list()
+    for tab_url in tab_url_list:
+        check_un_common(tab_url)
 
+
+def check_un_common(tab_url):
+    print('[{}]start checking {}...'.format(time.strftime("%H:%M:%S", time.localtime()), tab_url['name']))
+    url = tab_url['url']
+    text = get_text(url)
+    if text is None:
+        print('[{}]can not get equipment where url={}'.format(time.strftime("%H:%M:%S", time.localtime()), url))
+        un_success_url_list.append(url)
+        return
+    soup = BeautifulSoup(text, 'lxml')
+    if soup.find('div', attrs={'class': 'db-view__item__hq_switch sys_switch_hq'}) is None:  # 绿装没hq，必然是副本绿
+        model.hotfix(tab_url['id'])
 
 def get_food_url(lang, ignore):
     index = 1
@@ -351,7 +365,7 @@ def update_food_undone():
 
 def main():
     constant_init()
-    update_translator_na()
+    hotfix()
 
 
 if __name__ == '__main__':
