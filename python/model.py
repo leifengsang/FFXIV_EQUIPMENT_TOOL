@@ -229,5 +229,8 @@ class EquipmentModel(object):
         self.__db.execute(sql_update_url, [self.__version, food['id']])
         print('[{}]insert {} success!'.format(time.strftime("%H:%M:%S", time.localtime()), food['name']))
 
+    def get_food_by_id(self, id):
+        return self.__food_dict.get(id)
+
 
 model = EquipmentModel()

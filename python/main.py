@@ -36,6 +36,8 @@ def get_equipment_by_category(type, lang, ignore):
             base_url = base_url_jp
         elif lang == 'na':
             base_url = base_url_na
+        if base_url is None:
+            return
         url = base_url + 'lodestone/playguide/db/item/?category2={}&page={}'.format(type, index)
         print('[{}]currentUrl:'.format(time.strftime("%H:%M:%S", time.localtime())) + url)
         index += 1
@@ -231,9 +233,11 @@ def update_equipment_undone():
 
 
 def update_translator_na():
-    get_equipment_by_category(1, 'na', False)  # 武器
-    get_equipment_by_category(3, 'na', False)  # 防具
-    get_equipment_by_category(4, 'na', False)  # 饰品
+    # get_equipment_by_category(1, 'na', False)  # 武器
+    # get_equipment_by_category(3, 'na', False)  # 防具
+    # get_equipment_by_category(4, 'na', False)  # 饰品
+
+    get_food_url('na', False)
 
     model.update_translator_na(tab_url_list)
 
@@ -246,10 +250,17 @@ def hotfix():
     model.hotfix()
 
 
-def update_food_url():
+def get_food_url(lang, ignore):
     index = 1
     while True:
-        url = base_url_jp + 'lodestone/playguide/db/item/?category2=5&page=1&category3=46&page={}'.format(index)
+        base_url = None
+        if lang == 'jp':
+            base_url = base_url_jp
+        elif lang == 'na':
+            base_url = base_url_na
+        if base_url is None:
+            return
+        url = base_url + 'lodestone/playguide/db/item/?category2=5&page=1&category3=46&page={}'.format(index)
         print('[{}]currentUrl:'.format(time.strftime("%H:%M:%S", time.localtime())) + url)
         index += 1
         text = get_text(url)
@@ -273,6 +284,9 @@ def update_food_url():
             except:
                 continue
 
+            if ignore and model.get_food_by_id(tab_url['id']) is not None:
+                continue
+
             tab_url = {}
             tab_url['id'] = id
             tab_url['url'] = current_url
@@ -281,7 +295,10 @@ def update_food_url():
             tab_url['type'] = 2
             tab_url_list.append(tab_url)
 
-    model.update_url(tab_url_list)
+
+def update_food_url():
+    get_food_url('jp', True)
+    model.update(tab_url_list)
 
 
 def update_food(tab_url):
@@ -334,7 +351,7 @@ def update_food_undone():
 
 def main():
     constant_init()
-    update_food_undone()
+    update_translator_na()
 
 
 if __name__ == '__main__':
