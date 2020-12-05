@@ -25,6 +25,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
@@ -46,6 +47,7 @@ import meta.Equipment;
 import meta.Food;
 import meta.Job;
 import model.Model;
+import model.PropertiesModel;
 
 public class MainWindow {
 
@@ -340,7 +342,7 @@ public class MainWindow {
 		filterPanel.add(jobLabel);
 
 		floorInput = new JTextField();
-		floorInput.setText("500");
+		floorInput.setText(PropertiesModel.getInstance().getLevelFloor());
 		floorInput.addKeyListener(new KeyAdapter() {
 			public void keyTyped(KeyEvent e) {
 				if (floorInput.getText().length() > 3) {
@@ -365,7 +367,7 @@ public class MainWindow {
 		filterPanel.add(splitLabel);
 
 		ceilInput = new JTextField();
-		ceilInput.setText("505");
+		ceilInput.setText(PropertiesModel.getInstance().getLevelCeil());
 		ceilInput.addKeyListener(new KeyAdapter() {
 			public void keyTyped(KeyEvent e) {
 				if (ceilInput.getText().length() > 3) {
@@ -890,7 +892,8 @@ public class MainWindow {
 
 			bw.flush();
 			bw.close();
-			JOptionPane.showMessageDialog(null, "导出成功，文件路径：" + file.getAbsolutePath(), "导出成功", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null, "导出成功，文件路径：" + file.getAbsolutePath(), "导出成功",
+					JOptionPane.INFORMATION_MESSAGE);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getClass().getName() + " : " + e.getMessage(), "导出时发生错误",
 					JOptionPane.ERROR_MESSAGE);

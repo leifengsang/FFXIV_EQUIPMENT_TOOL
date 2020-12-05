@@ -11,6 +11,10 @@ public class PropertiesModel {
 
 	private String exportPath;
 
+	private String levelFloor;
+
+	private String levelCeil;
+
 	private static PropertiesModel instance;
 
 	public static PropertiesModel getInstance() {
@@ -32,6 +36,14 @@ public class PropertiesModel {
 		return exportPath;
 	}
 
+	public String getLevelFloor() {
+		return levelFloor;
+	}
+
+	public String getLevelCeil() {
+		return levelCeil;
+	}
+
 	public PropertiesModel() {
 		try {
 			Properties properties = new Properties();
@@ -39,6 +51,8 @@ public class PropertiesModel {
 			this.dbPath = properties.getProperty("dbPath");
 			this.resourcePath = properties.getProperty("resourcePath");
 			this.exportPath = properties.getProperty("exportPath");
+			this.levelFloor = properties.getProperty("levelFloor");
+			this.levelCeil = properties.getProperty("levelCeil");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
