@@ -108,7 +108,7 @@ public class FoodPanel extends JPanel {
 
 		String text = "+" + String.valueOf(value);
 		if (limit != -1) {
-			text += String.format("[%d]", limit);
+			text += "%" + String.format("[%d]", limit);
 		}
 
 		JLabel label = null;
