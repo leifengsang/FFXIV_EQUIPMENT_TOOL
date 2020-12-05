@@ -146,7 +146,7 @@ public class MainWindow {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
 		frame.getContentPane().setLayout(null);
-		frame.setIconImage(Toolkit.getDefaultToolkit().getImage("../../resource/icon.jpg"));
+		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(Model.getInstance().getResourcePath() + "icon.jpg"));
 
 		JPanel attrPanel = new JPanel();
 		attrPanel.setBounds(frame.getWidth() - 300, 10, 300, frame.getHeight() - 10 - TITLE_HEIGHT);
@@ -871,7 +871,7 @@ public class MainWindow {
 	private void export() {
 		try {
 			String jobName = currentJob.getClass().getName().replace("meta.", "");
-			String path = Model.EXPORT_PATH + jobName + ".txt";
+			String path = Model.getInstance().getExportPath() + jobName + ".txt";
 			File file = new File(path);
 			if (!file.exists()) {
 				file.createNewFile();
@@ -890,6 +890,7 @@ public class MainWindow {
 
 			bw.flush();
 			bw.close();
+			JOptionPane.showMessageDialog(null, "导出成功，文件路径：" + file.getAbsolutePath(), "导出成功", JOptionPane.INFORMATION_MESSAGE);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getClass().getName() + " : " + e.getMessage(), "导出时发生错误",
 					JOptionPane.ERROR_MESSAGE);

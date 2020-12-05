@@ -5,6 +5,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import model.PropertiesModel;
+
 public class SQLHelper {
 
 	private static SQLHelper instance;
@@ -22,10 +24,10 @@ public class SQLHelper {
 
 	private ResultSet resultSet;
 
-	private String dbPath = "../../db/tool.db";
+	private String dbPath;
 
 	private SQLHelper() {
-
+		this.dbPath = PropertiesModel.getInstance().getDbPath();
 	}
 
 	private Connection getConnection() {

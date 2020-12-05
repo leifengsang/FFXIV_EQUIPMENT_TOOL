@@ -23,8 +23,6 @@ import meta.Job;
 import sql.SQLHelper;
 
 public class Model {
-	
-	public static final String EXPORT_PATH = "../../export/";
 
 	public static final String[] Job_LIST = { "PLD", "WAR", "DRK", "GNB", "WHM", "SCH", "AST", "MNK", "DRG", "NIN",
 			"SAM", "BRD", "MCH", "DNC", "BLM", "SMN", "RDM" };
@@ -51,7 +49,9 @@ public class Model {
 
 	private int language = LANG_JP;
 
-	private static final String THRESHOLD_PATH = "../../resource/threshold.xlsx";
+	private String resourcePath;
+
+	private String exportPath = "../../export/";
 
 	private List<Integer> criticalHitThreshold = new ArrayList<>();
 
@@ -75,8 +75,14 @@ public class Model {
 	}
 
 	private Model() {
+		loadProperties();
 		sqlHelper = SQLHelper.getInstance();
 		load();
+	}
+
+	private void loadProperties() {
+		this.resourcePath = PropertiesModel.getInstance().getResourcePath();
+		this.exportPath = PropertiesModel.getInstance().getExportPath();
 	}
 
 	public List<Equipment> getEquipmentList() {
@@ -93,6 +99,14 @@ public class Model {
 
 	public void setLanguage(int language) {
 		this.language = language;
+	}
+
+	public String getResourcePath() {
+		return resourcePath;
+	}
+
+	public String getExportPath() {
+		return exportPath;
 	}
 
 	private void load() {
@@ -144,14 +158,14 @@ public class Model {
 		} catch (Exception e) {
 			System.out.println("从数据库加载食物数据失败！ type:" + e.getClass().getName() + ", error:" + e.getMessage());
 		}
-		
+
 		foodList.sort(Comparator.comparing(Food::getLevel).reversed());
 	}
 
 	@SuppressWarnings("resource")
 	private void loadThreshold() {
 		try {
-			InputStream is = new FileInputStream(new File(THRESHOLD_PATH));
+			InputStream is = new FileInputStream(new File(resourcePath + "threshold.xlsx"));
 			Workbook excel = new XSSFWorkbook(is);
 			for (int sheetNum = 0; sheetNum < excel.getNumberOfSheets(); sheetNum++) {
 				Sheet sheet = excel.getSheetAt(sheetNum);
