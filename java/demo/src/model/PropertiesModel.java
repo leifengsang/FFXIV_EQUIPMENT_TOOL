@@ -15,6 +15,10 @@ public class PropertiesModel {
 
 	private String levelCeil;
 
+	private String width;
+
+	private String height;
+
 	private static PropertiesModel instance;
 
 	public static PropertiesModel getInstance() {
@@ -37,11 +41,33 @@ public class PropertiesModel {
 	}
 
 	public String getLevelFloor() {
+		if (levelFloor == null) {
+			return "500";
+		}
 		return levelFloor;
 	}
 
 	public String getLevelCeil() {
+		if (levelCeil == null) {
+			return "505";
+		}
 		return levelCeil;
+	}
+
+	public int getWidth() {
+		try {
+			return Integer.parseInt(width);
+		} catch (Exception e) {
+			return 1280;
+		}
+	}
+
+	public int getHeight() {
+		try {
+			return Integer.parseInt(height);
+		} catch (Exception e) {
+			return 960;
+		}
 	}
 
 	public PropertiesModel() {
@@ -53,6 +79,9 @@ public class PropertiesModel {
 			this.exportPath = properties.getProperty("exportPath");
 			this.levelFloor = properties.getProperty("levelFloor");
 			this.levelCeil = properties.getProperty("levelCeil");
+			this.width = properties.getProperty("width");
+			this.height = properties.getProperty("height");
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

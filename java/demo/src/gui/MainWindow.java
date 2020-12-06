@@ -25,7 +25,6 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
@@ -144,7 +143,9 @@ public class MainWindow {
 		screenHeight = (int) screensize.getHeight();
 		frame = new JFrame();
 		frame.setTitle("配装模拟器");
-		frame.setBounds((screenWidth - 1280) / 2, (screenHeight - 960) / 2, 1280, 960);
+		int width = PropertiesModel.getInstance().getWidth();
+		int height = PropertiesModel.getInstance().getHeight();
+		frame.setBounds((screenWidth - width) / 2, (screenHeight - height) / 2, width, height);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
 		frame.getContentPane().setLayout(null);
