@@ -9,7 +9,7 @@ class EquipmentModel(object):
     __equipment_dict = {}
     __food_list = []
     __food_dict = {}
-    __version = 4
+    __version = 6
 
     __db = None
 
@@ -106,7 +106,6 @@ class EquipmentModel(object):
             sql_values += '),'
         sql_values = sql_values.strip(',')
         sql = sql_head + sql_values
-        print(sql)
         self.__db.execute(sql)
 
     def __insert_equipment(self, equipment):
@@ -120,16 +119,16 @@ class EquipmentModel(object):
         sql_value += str(equipment['position']) + ","
         sql_value += str(equipment['level']) + ","
         sql_value += "'" + equipment['enableJobList'] + "',"
-        sql_value += "'" + equipment.get('クリティカル', 0) + "',"
-        sql_value += "'" + equipment.get('ダイレクトヒット', 0) + "',"
-        sql_value += "'" + equipment.get('意思力', 0) + "',"
-        sql_value += "'" + equipment.get('信仰', 0) + "',"
-        sql_value += "'" + equipment.get('スキルスピード', 0) + "',"
-        sql_value += "'" + equipment.get('スペルスピード', 0) + "',"
-        sql_value += "'" + equipment.get('不屈', 0) + "'"
+        sql_value += "" + str(equipment.get('クリティカル', 0)) + ","
+        sql_value += "" + str(equipment.get('ダイレクトヒット', 0)) + ","
+        sql_value += "" + str(equipment.get('意思力', 0)) + ","
+        sql_value += "" + str(equipment.get('信仰', 0)) + ","
+        sql_value += "" + str(equipment.get('スキルスピード', 0)) + ","
+        sql_value += "" + str(equipment.get('スペルスピード', 0)) + ","
+        sql_value += "" + str(equipment.get('不屈', 0)) + ","
         sql_value += str(equipment['normalSocket']) + ","
         sql_value += str(equipment['moreSocket']) + ","
-        sql_value += "'" + equipment.get('VIT', 0) + "'"
+        sql_value += "'" + str(equipment.get('VIT', 0)) + "'"
         sql_value += ')'
         sql = sql_head + sql_value
         self.__db.execute(sql)
@@ -171,6 +170,19 @@ class EquipmentModel(object):
             list.append(url)
         return list
 
+    def get_url_by_level_and_type(self, level, type):
+        list = []
+        sql = 'select * from url where version!=? and level>=? and type=?'
+        result = self.__db.execute(sql, [self.__version, level, type])
+        for row in result:
+            url = {}
+            url['id'] = row['id']
+            url['url'] = row['url']
+            url['name'] = row['name']
+            url['level'] = row['level']
+            list.append(url)
+        return list
+
     def hotfix_get_list(self):
         list = []
         sql = 'select u.* from url as u inner join equipment as e where u.id=e.id and e.type=3 and e.position=12 and u.version!=?'
@@ -187,9 +199,9 @@ class EquipmentModel(object):
     def hotfix(self, id):
         sql = 'update equipment set type=6 where id=?'
         self.__db.execute(sql, [id])
-        self.__db.execute(sql, [id+'#copy'])
+        self.__db.execute(sql, [id + '#copy'])
 
-    def update_food(self, food, ignore):
+    def update_food(self, food, ignore=False):
         if self.__food_dict.get(food['id']) is None:
             self.__insert_food(food, ignore)
             return

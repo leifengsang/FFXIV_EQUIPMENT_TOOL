@@ -28,7 +28,7 @@ def get_text(url):
     return None
 
 
-def get_equipment_by_category(type, lang, ignore):
+def get_equipment_by_category(type, lang, ignore, level_limit=None):
     index = 1
     while True:
         base_url = None
@@ -58,6 +58,9 @@ def get_equipment_by_category(type, lang, ignore):
             td = tr.find('td', attrs={'class': 'db-table__body--dark db-table__body--center'})
             level = int(td.string)
 
+            if level_limit is not None and level < level_limit:
+                continue
+
             if ignore and model.get_url_by_id(id) is not None:
                 continue
 
@@ -71,9 +74,9 @@ def get_equipment_by_category(type, lang, ignore):
 
 
 def update_equipment_url():
-    get_equipment_by_category(1, 'jp', True)  # 武器
-    get_equipment_by_category(3, 'jp', True)  # 防具
-    get_equipment_by_category(4, 'jp', True)  # 饰品
+    get_equipment_by_category(1, 'jp', True, 510)  # 武器
+    get_equipment_by_category(3, 'jp', True, 510)  # 防具
+    get_equipment_by_category(4, 'jp', True, 510)  # 饰品
 
     model.update_url(tab_url_list)
 
@@ -233,11 +236,11 @@ def update_equipment_undone():
 
 
 def update_translator_na():
-    # get_equipment_by_category(1, 'na', False)  # 武器
-    # get_equipment_by_category(3, 'na', False)  # 防具
-    # get_equipment_by_category(4, 'na', False)  # 饰品
+    # get_equipment_by_category(1, 'na', False, 510)  # 武器
+    # get_equipment_by_category(3, 'na', False, 510)  # 防具
+    # get_equipment_by_category(4, 'na', False, 510)  # 饰品
 
-    get_food_url('na', False)
+    get_food_url('na', False, 490)
 
     model.update_translator_na(tab_url_list)
 
@@ -264,7 +267,8 @@ def check_un_common(tab_url):
     if soup.find('div', attrs={'class': 'db-view__item__hq_switch sys_switch_hq'}) is None:  # 绿装没hq，必然是副本绿
         model.hotfix(tab_url['id'])
 
-def get_food_url(lang, ignore):
+
+def get_food_url(lang, ignore, level_limit=None):
     index = 1
     while True:
         base_url = None
@@ -298,7 +302,10 @@ def get_food_url(lang, ignore):
             except:
                 continue
 
-            if ignore and model.get_food_by_id(tab_url['id']) is not None:
+            if level_limit is not None and level < level_limit:
+                continue
+
+            if ignore and model.get_food_by_id(id) is not None:
                 continue
 
             tab_url = {}
@@ -311,8 +318,8 @@ def get_food_url(lang, ignore):
 
 
 def update_food_url():
-    get_food_url('jp', True)
-    model.update(tab_url_list)
+    get_food_url('jp', True, 490)
+    model.update_url(tab_url_list)
 
 
 def update_food(tab_url):
@@ -354,7 +361,7 @@ def update_food(tab_url):
 
 
 def update_food_undone():
-    undone_list = model.get_url_undone(2)
+    undone_list = model.get_url_by_level_and_type(490, 2)
     for tab_url in undone_list:
         update_food(tab_url)
     if len(un_success_url_list) != 0:
@@ -363,9 +370,20 @@ def update_food_undone():
             print(url)
 
 
+def update_equipment_by_level(level):
+    undone_list = model.get_url_by_level(level)
+    for tab_url in undone_list:
+        update_equipment(tab_url)
+    if len(un_success_url_list) != 0:
+        print('unSuccessUrlList(size:{}):'.format(len(un_success_url_list)))
+        for url in un_success_url_list:
+            print(url)
+
+
 def main():
     constant_init()
-    hotfix()
+    update_food_undone()
+    update_translator_na()
 
 
 if __name__ == '__main__':
