@@ -147,7 +147,7 @@ public class Attr implements Cloneable {
 			this.skillSpeed = Materia.ATTR_VALUE[materia.getValue()];
 			break;
 		case Materia.SPELL_SPEED:
-			this.criticalHit = Materia.ATTR_VALUE[materia.getValue()];
+			this.spellSpeed = Materia.ATTR_VALUE[materia.getValue()];
 			break;
 		case Materia.FORTITUDE:
 			this.fortitude = Materia.ATTR_VALUE[materia.getValue()];
