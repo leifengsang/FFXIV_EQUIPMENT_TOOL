@@ -1,2 +1,2 @@
 # FFXIV_EQUIPMENT_TOOL
-equipment editor in final fantasy XIV
+equipment simulator in final fantasy XIV
