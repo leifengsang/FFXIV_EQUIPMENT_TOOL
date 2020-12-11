@@ -183,23 +183,21 @@ class EquipmentModel(object):
             list.append(url)
         return list
 
-    def hotfix_get_list(self):
+    def hotfix1211_get_list(self):
         list = []
-        sql = 'select u.* from url as u inner join equipment as e where u.id=e.id and e.type=3 and e.position=12 and u.version!=?'
-        result = self.__db.execute(sql, [self.__version])
+        sql = "select u.id,u.url from url as u inner join equipment as e on u.id=e.id and e.enableJobList='MCH'"
+        result = self.__db.execute(sql)
         for row in result:
-            url = {}
-            url['id'] = row['id']
-            url['url'] = row['url']
-            url['name'] = row['name']
-            url['level'] = row['level']
-            list.append(url)
+            obj = {}
+            obj['id'] = row['id']
+            obj['url'] = row['url']
+            list.append(obj)
         return list
 
-    def hotfix(self, id):
-        sql = 'update equipment set type=6 where id=?'
+    def hotfix1211(self, id):
+        sql = "update equipment set enableJobList='SCH' where id=?"
         self.__db.execute(sql, [id])
-        self.__db.execute(sql, [id + '#copy'])
+        print('[{}]hotfix1211 {} success!'.format(time.strftime("%H:%M:%S", time.localtime()), id))
 
     def update_food(self, food, ignore=False):
         if self.__food_dict.get(food['id']) is None:

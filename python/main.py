@@ -212,7 +212,7 @@ def constant_init():
     job_dict['召喚士'] = 'SMN'
     job_dict['赤魔道士'] = 'RDM'
     job_dict['白魔道士'] = 'WHM'
-    job_dict['学者'] = 'MCH'
+    job_dict['学者'] = 'SCH'
     job_dict['占星術師'] = 'AST'
     job_dict['全クラス'] = 'ALL'
 
@@ -249,23 +249,37 @@ def update_translator():
     update_translator_na()
 
 
-def hotfix():
-    tab_url_list = model.hotfix_get_list()
-    for tab_url in tab_url_list:
-        check_un_common(tab_url)
+def hotfix1211():
+    obj_list = model.hotfix1211_get_list()
+    for obj in obj_list:
+        do_hotfix1211(obj)
+    if len(un_success_url_list) != 0:
+        print('unSuccessUrlList(size:{}):'.format(len(un_success_url_list)))
+        for url in un_success_url_list:
+            print(url)
 
 
-def check_un_common(tab_url):
-    print('[{}]start checking {}...'.format(time.strftime("%H:%M:%S", time.localtime()), tab_url['name']))
-    url = tab_url['url']
+def do_hotfix1211(obj):
+    url = obj['url']
+    id = obj['id']
+    print('[{}]start doing hotfix1211 {}...'.format(time.strftime("%H:%M:%S", time.localtime()), url))
     text = get_text(url)
     if text is None:
         print('[{}]can not get equipment where url={}'.format(time.strftime("%H:%M:%S", time.localtime()), url))
         un_success_url_list.append(url)
         return
     soup = BeautifulSoup(text, 'lxml')
-    if soup.find('div', attrs={'class': 'db-view__item__hq_switch sys_switch_hq'}) is None:  # 绿装没hq，必然是副本绿
-        model.hotfix(tab_url['id'])
+    is_sch = False
+    enable_job_str = soup.find('div', attrs={'class': 'db-view__item_equipment__class'}).string
+    enable_job_list = enable_job_str.split(' ')
+    for job in enable_job_list:
+        if job not in job_dict:
+            continue
+        if job_dict[job] == 'SCH':
+            is_sch = True
+
+    if is_sch:
+        model.hotfix1211(id)
 
 
 def get_food_url(lang, ignore, level_limit=None):
@@ -382,8 +396,7 @@ def update_equipment_by_level(level):
 
 def main():
     constant_init()
-    update_food_undone()
-    update_translator_na()
+    hotfix1211()
 
 
 if __name__ == '__main__':
