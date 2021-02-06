@@ -874,7 +874,7 @@ public class MainWindow {
 	private void export() {
 		try {
 			String jobName = currentJob.getClass().getName().replace("meta.", "");
-			String path = Model.getInstance().getExportPath() + jobName + ".txt";
+			String path = Model.getInstance().getExportPath() + jobName + "@" + calAvgEquipmentLevel() + ".txt";
 			File file = new File(path);
 			if (!file.exists()) {
 				file.createNewFile();
@@ -900,6 +900,23 @@ public class MainWindow {
 					JOptionPane.ERROR_MESSAGE);
 		}
 
+	}
+
+	private String calAvgEquipmentLevel() {
+		int level = 0;
+		int count = 0;
+		for (int position = 1; position <= Equipment.POS_LIMIT; position++) {
+			if (position == Equipment.POS_SECONDARY && !currentJob.isEnableSecondary()) {
+				continue;
+			}
+			count++;
+			String name = getSelectedName(position, true);
+			if (!name.equals("无")) {
+				Equipment equipment = Model.getInstance().getEquipmentByKey(name + "#" + position);
+				level += equipment.getLevel();
+			}
+		}
+		return (int) Math.floor(level / count) + "";
 	}
 
 	private void writeAttr(BufferedWriter bw) throws IOException {
