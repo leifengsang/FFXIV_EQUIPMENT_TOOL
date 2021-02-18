@@ -893,7 +893,7 @@ public class MainWindow {
 
 			bw.flush();
 			bw.close();
-			JOptionPane.showMessageDialog(null, "导出成功，文件路径：" + file.getAbsolutePath(), "导出成功",
+			JOptionPane.showMessageDialog(null, "导出成功，文件路径：" + file.getCanonicalPath(), "导出成功",
 					JOptionPane.INFORMATION_MESSAGE);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getClass().getName() + " : " + e.getMessage(), "导出时发生错误",
