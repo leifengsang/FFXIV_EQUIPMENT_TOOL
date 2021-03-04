@@ -24,7 +24,7 @@ import sql.SQLHelper;
 
 public class Model {
 
-	public static final String[] Job_LIST = { "PLD", "WAR", "DRK", "GNB", "WHM", "SCH", "AST", "MNK", "DRG", "NIN",
+	public static final String[] JOB_LIST = { "PLD", "WAR", "DRK", "GNB", "WHM", "SCH", "AST", "MNK", "DRG", "NIN",
 			"SAM", "BRD", "MCH", "DNC", "BLM", "SMN", "RDM" };
 
 	public static final int LANG_JP = 1;
@@ -195,7 +195,7 @@ public class Model {
 				List<Class<? extends Job>> enableJobList = new ArrayList<>();
 				String enableJobString = SQLHelper.getStringValue(ret, "enableJobList");
 				if (enableJobString.equals("ALL")) {
-					for (String job : Job_LIST) {
+					for (String job : JOB_LIST) {
 						Class<?> clazz = Class.forName("meta." + job);
 						enableJobList.add((Class<? extends Job>) clazz);
 					}

@@ -332,7 +332,7 @@ public class MainWindow {
 		filterPanel.setLayout(null);
 
 		JComboBox<String> jobComboBox = new JComboBox<>();
-		for (String job : Model.Job_LIST) {
+		for (String job : Model.JOB_LIST) {
 			jobComboBox.addItem(job);
 		}
 		jobComboBox.setBounds(59, 13, 107, 24);
